@@ -482,8 +482,6 @@ const CadastroUsuario: React.FC = () => {
               </form>
             )}
           </div>
-          {/* <div className="flex justify-center items-center"> */}
-
             <div
               className="w-full h-full"
               style={{
@@ -493,13 +491,7 @@ const CadastroUsuario: React.FC = () => {
                 backgroundImage: `url(${imagem})`,
               }}
             >
-
             </div>
-
-
-          {/* </div> */}
-
-
         </div>
       </ContainerItem>
     </div>
