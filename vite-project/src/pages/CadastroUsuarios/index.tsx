@@ -127,13 +127,13 @@ const CadastroUsuario: React.FC = () => {
 
   const erroStyle = "text-red-600 text-left  text-[12px]";
   const imagem =
-  tipo == null
-    ? "./../../../public/imagens/cadastro-selecione.jpg"
-    : tipo === "idoso"
-    ? "./../../../public/imagens/cadastro-idoso.jpg"
-    : "./../../../public/imagens/cadastro-voluntario.jpg";
+    tipo == null
+      ? "./../../../public/imagens/cadastro-selecione.jpg"
+      : tipo === "idoso"
+        ? "./../../../public/imagens/cadastro-idoso.jpg"
+        : "./../../../public/imagens/cadastro-voluntario.jpg";
 
-console.log(imagem);
+  console.log(imagem);
   return (
     <div className="h-screen">
       <ToastContainer
@@ -208,8 +208,8 @@ console.log(imagem);
                     <div>
                       <label
                         className={`${errors.nome
-                            ? "border-red-500 text-red-500"
-                            : "border-gray-300"
+                          ? "border-red-500 text-red-500"
+                          : "border-gray-300"
                           }`}
                         htmlFor="Nome"
                       >
@@ -231,8 +231,8 @@ console.log(imagem);
                       <div className="w-full">
                         <label
                           className={`${errors.cidade
-                              ? "border-red-500 text-red-500"
-                              : "border-gray-300"
+                            ? "border-red-500 text-red-500"
+                            : "border-gray-300"
                             }`}
                           htmlFor="cidade"
                         >
@@ -253,8 +253,8 @@ console.log(imagem);
                       <div className="w-full">
                         <label
                           className={`${errors.nome
-                              ? "border-red-500 text-red-500"
-                              : "border-gray-300"
+                            ? "border-red-500 text-red-500"
+                            : "border-gray-300"
                             }`}
                           htmlFor="endereço"
                         >
@@ -277,8 +277,8 @@ console.log(imagem);
                       <div className="w-full">
                         <label
                           className={`${errors.nome
-                              ? "border-red-500 text-red-500"
-                              : "border-gray-300"
+                            ? "border-red-500 text-red-500"
+                            : "border-gray-300"
                             }`}
                           htmlFor="Data de Nascimento"
                         >
@@ -290,8 +290,8 @@ console.log(imagem);
                           {...register("dataNascimento")}
                           id="dataNascimento"
                           className={`${errors.dataNascimento
-                              ? "input-error"
-                              : "border-gray-300"
+                            ? "input-error"
+                            : "border-gray-300"
                             } border-2 p-2 rounded w-full`}
                         />
                         {errors?.dataNascimento && (
@@ -304,8 +304,8 @@ console.log(imagem);
                       <div className="w-full">
                         <label
                           className={`${errors.nome
-                              ? "border-red-500 text-red-500"
-                              : "border-gray-300"
+                            ? "border-red-500 text-red-500"
+                            : "border-gray-300"
                             }`}
                           htmlFor="CPF"
                         >
@@ -330,8 +330,8 @@ console.log(imagem);
                         <div className="w-full">
                           <label
                             className={`${errors.nome
-                                ? "border-red-500 text-red-500"
-                                : "border-gray-300"
+                              ? "border-red-500 text-red-500"
+                              : "border-gray-300"
                               }`}
                             htmlFor="profissão"
                           >
@@ -355,8 +355,8 @@ console.log(imagem);
                         <div className="w-full">
                           <label
                             className={`${errors.profissao
-                                ? "border-red-500 text-red-500"
-                                : "border-gray-300"
+                              ? "border-red-500 text-red-500"
+                              : "border-gray-300"
                               }`}
                             htmlFor="habilidades"
                           >
@@ -392,8 +392,8 @@ console.log(imagem);
                       <>
                         <label
                           className={`${errors.necessidade
-                              ? "border-red-500 text-red-500"
-                              : "border-gray-300"
+                            ? "border-red-500 text-red-500"
+                            : "border-gray-300"
                             }`}
                         >
                           {" "}
@@ -406,8 +406,8 @@ console.log(imagem);
                             <div key={item.id}>
                               <label
                                 className={`${errors.necessidade
-                                    ? "border-red-500 text-red-500"
-                                    : "border-gray-300"
+                                  ? "border-red-500 text-red-500"
+                                  : "border-gray-300"
                                   }`}
                               >
                                 {item.categoria}
@@ -428,8 +428,8 @@ console.log(imagem);
                     <div>
                       <label
                         className={`${errors.nome
-                            ? "border-red-500 text-red-500"
-                            : "border-gray-300"
+                          ? "border-red-500 text-red-500"
+                          : "border-gray-300"
                           }`}
                         htmlFor="E-mail"
                       >
@@ -450,8 +450,8 @@ console.log(imagem);
                     <div>
                       <label
                         className={`${errors.nome
-                            ? "border-red-500 text-red-500"
-                            : "border-gray-300"
+                          ? "border-red-500 text-red-500"
+                          : "border-gray-300"
                           }`}
                         htmlFor="Senha"
                       >
@@ -482,22 +482,22 @@ console.log(imagem);
               </form>
             )}
           </div>
-          <div className="flex justify-center items-center">
+          {/* <div className="flex justify-center items-center"> */}
 
-          <div
-  className="w-[90%] h-[96%]"
-  style={{
-    backgroundPosition:"center",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundImage: `url(${imagem})`, // Use `${imagem}` corretamente
-  }}
->
+            <div
+              className="w-full h-full"
+              style={{
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${imagem})`,
+              }}
+            >
 
-</div>
+            </div>
 
 
-          </div>
+          {/* </div> */}
 
 
         </div>
