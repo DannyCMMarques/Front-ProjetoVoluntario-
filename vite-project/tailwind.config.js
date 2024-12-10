@@ -2,8 +2,11 @@
 export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        buttonBlue: '#1d4ed8',
+      },
+    },
   },
   plugins: [],
 }
-

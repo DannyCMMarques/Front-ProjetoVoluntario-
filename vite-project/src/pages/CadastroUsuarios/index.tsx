@@ -472,7 +472,7 @@ console.log(imagem);
                   </div>
                   <div>
                     <button
-                      className="bg-[#1d4ed8] p-2 w-full mt-4 text-white text-center rounded-md hover:opacity-80 duration-150 mb-4"
+                      className="bg-buttonBlue p-2 w-full mt-4 text-white text-center rounded-md hover:opacity-80 duration-150 mb-4"
                       type="submit"
                     >
                       Cadastrar
