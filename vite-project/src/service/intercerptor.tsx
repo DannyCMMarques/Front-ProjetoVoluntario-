@@ -5,7 +5,6 @@ const useApiInterceptor = () => {
 
   const baseURL = import.meta.env.BASE_URL;
 
-  console.log(111,baseURL);
   const api = axios.create({
     baseURL: "http://localhost:8080",
   });

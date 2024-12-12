@@ -38,7 +38,7 @@ const successValidation = (data: any) =>
   });
 const CadastroUsuario: React.FC = () => {
   const [tipo, setTipo] = useState<"IDOSO" | "VOLUNTARIO" | null>(null);
-  console.log(tipo);
+
   const { cadastrarUsuario } = useUsuarioService();
   const validationSchemaLogin = z
     .object({
