@@ -9,7 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
 import ContainerItem from "../../components/container";
-import useUsuarioService from "../../service/useUsuarioService";
+import useUsuarioService from "../../service/UsuarioService";
 import { habilidadeVoluntarioMock } from "../../utils/mocks/Cadastro/HabilidadesMock";
 import { necessidadesIdosoMock } from "../../utils/mocks/Cadastro/Necessidades";
 const errorValidator = (data: any) =>
