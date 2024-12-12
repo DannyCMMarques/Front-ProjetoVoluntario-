@@ -121,9 +121,7 @@ const CadastroUsuario: React.FC = () => {
   });
 
   const onSubmit = (data: any) => {
-    console.log("entrei aqui ");
-    console.log(555555555555555,tipo);
-    console.log(data);
+
     if (!tipo) {
       errorValidator("Selecione o tipo de cadastro.");
       return;

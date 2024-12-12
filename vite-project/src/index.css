@@ -8,8 +8,6 @@
 }
 
 body {
-  background: #ffff;
-  color: var(--preto);
   -webkit-font-smoothing: antialiased;
 }
 

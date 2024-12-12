@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html{
-  background-color: #f4f7fe;
+  background-color: #f4f7fe !important;
 }
 input,
 textarea {
