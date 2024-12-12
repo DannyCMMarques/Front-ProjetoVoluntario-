@@ -9,7 +9,7 @@ const MenuContents = ({ home, dados, voluntarios, idosos, atividades }) => {
     },
     {
       id: 2,
-      href: "/meus-dados",
+      href: "/usuario",
       titulo: "Meus dados ",
       icones: dados,
     },
@@ -28,7 +28,7 @@ const MenuContents = ({ home, dados, voluntarios, idosos, atividades }) => {
     {
       id: 5,
       href: "/minhas-atividades",
-      titulo: "Minha agenda ",
+      titulo: "Agenda ",
       icones: atividades,
     },
   ];

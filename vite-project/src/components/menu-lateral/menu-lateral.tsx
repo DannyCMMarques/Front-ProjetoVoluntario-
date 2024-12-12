@@ -42,7 +42,7 @@ const SideMenu = () => {
     }
   };
 
-  const handleNavegar = (href: string) => {
+  const handleNavegar = (href) => {
     if (href !== "/sair") {
       window.location.href = href;
     } else {
@@ -52,23 +52,21 @@ const SideMenu = () => {
   };
 
   return (
-    <div className="w-full flex items-start">
+    <div className="mr-7">
       <div
         className={`fixed top-0 left-0 h-full bg-white shadow-md transition-all duration-200 ${
           isOpen ? "w-20" : "w-44"
         }`}
       >
         <div
-          className="flex justify-center items-centercursor-pointer mt-3"
+          className="flex justify-center items-center cursor-pointer mt-3"
           onClick={() => (!toggle ? toggleSideMenu() : undefined)}
         >
-          <div>
-            <img
-              className={isOpen ? "w-52" : "w-28"}
-              src="imagens/logo.png"
-              alt="Icon"
-            />
-          </div>
+          <img
+            className={isOpen ? "w-52" : "w-28"}
+            src="imagens/logo.png"
+            alt="Icon"
+          />
         </div>
         <ul className="mt-4">
           {menuCardContent.map((item) => (
@@ -87,7 +85,7 @@ const SideMenu = () => {
                 >
                   <p>{item.icones}</p>
                   {!isOpen && (
-                    <p className="text-gray-500 text-base font-medium w-full group-hover:text-white">
+                    <p className="text-gray-500 text-base font-medium w-full  group-hover:text-white">
                       {item.titulo}
                     </p>
                   )}
@@ -95,7 +93,7 @@ const SideMenu = () => {
               </a>
             </li>
           ))}
-          <li className="flex fixed bottom-3 items-center justify-center gap-4 p-2 hover:bg-gradient-to-r hover:from-teal-500 hover:to-blue-500 cursor-pointer transition-all">
+          <li className="fixed bottom-3 flex items-center justify-center gap-4 p-2 hover:bg-gradient-to-r hover:from-teal-500 hover:to-blue-500 cursor-pointer transition-all">
             <a
               onClick={() => handleNavegar("/sair")}
               className="flex items-center gap-4 w-full group"
