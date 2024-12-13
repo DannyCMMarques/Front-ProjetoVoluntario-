@@ -53,20 +53,20 @@ const CadastroUsuario: React.FC = () => {
       cidade: z.string().min(3, { message: "Cidade é obrigatória" }),
       estado: z.string().nonempty({ message: "Estado é obrigatório" }),
       profissao: z.string().optional(),
-      CPF: z
+      cpf: z
         .string()
-        .min(11, { message: "CPF deve ter pelo menos 11 caracteres" }),
+        .min(11, { message: "cpf deve ter pelo menos 11 caracteres" }),
       tipo: z.string().optional(),
-      necessidade: z.array(z.string()),
-      habilidades: z.string().optional(),
+      necessidade: z.any(),
+      habilidade: z.string().optional(),
     })
     .superRefine((data, ctx) => {
       if (tipo === "VOLUNTARIO") {
-        if (!data.habilidades || data.habilidades.trim() === "") {
+        if (!data.habilidade || data.habilidade.trim() === "") {
           ctx.addIssue({
             code: "custom",
-            path: ["habilidades"],
-            message: "Habilidades são obrigatórias para voluntários",
+            path: ["habilidade"],
+            message: "Habilidade são obrigatórias para voluntários",
           });
         }
         if (!data.profissao || data.profissao.trim() === "") {
@@ -103,10 +103,10 @@ const CadastroUsuario: React.FC = () => {
       cidade: "",
       estado: "",
       profissao: "",
-      CPF: "",
-      tipo:"VOLUNTARIO",
-      necessidade: [],
-      habilidades: "",
+      cpf: "",
+      tipo:"tipo",
+      necessidade:"",
+      habilidade: "",
     },
   });
   const mutation = useMutation({
@@ -126,6 +126,7 @@ const CadastroUsuario: React.FC = () => {
       errorValidator("Selecione o tipo de cadastro.");
       return;
     }
+    const necessidadeToString =  data.necessidade.join(',')
     const payload = {
       nome: data.nome,
       email: data.email,
@@ -134,10 +135,10 @@ const CadastroUsuario: React.FC = () => {
       cidade: data.cidade,
       estado: data.estado,
       profissao: data.profissao,
-      CPF: data.CPF,
-      tipo: "VOLUNTARIO",
-      necessidade: data.necessidade,
-      habilidades: data.habilidades,
+      cpf: data.cpf,
+      tipo: "tipo",
+      necessidade:necessidadeToString,
+      habilidade: data.habilidade,
     };
     console.log(payload);
 
@@ -315,7 +316,7 @@ const CadastroUsuario: React.FC = () => {
                           Data de Nascimento:
                         </label>
                         <input
-                          type="text"
+                          type="data"
                           placeholder="Insira sua data de Nascimento"
                           {...register("dataNascimento")}
                           id="dataNascimento"
@@ -339,21 +340,21 @@ const CadastroUsuario: React.FC = () => {
                               ? "border-red-500 text-red-500"
                               : "border-gray-300"
                           }`}
-                          htmlFor="CPF"
+                          htmlFor="cpf"
                         >
                           CPF:
                         </label>
                         <input
                           type="text"
-                          placeholder="Insira seu endereço"
-                          {...register("CPF")}
-                          id="CPF"
+                          placeholder="Insira seu CPF"
+                          {...register("cpf")}
+                          id="cpf"
                           className={`${
-                            errors.CPF ? "input-error" : "border-gray-300"
+                            errors.cpf ? "input-error" : "border-gray-300"
                           } border-2 p-2 rounded w-full`}
                         />
-                        {errors?.CPF && (
-                          <p className={erroStyle}> {errors.CPF.message}</p>
+                        {errors?.cpf && (
+                          <p className={erroStyle}> {errors.cpf.message}</p>
                         )}
                       </div>
                     </div>
@@ -394,18 +395,18 @@ const CadastroUsuario: React.FC = () => {
                                 ? "border-red-500 text-red-500"
                                 : "border-gray-300"
                             }`}
-                            htmlFor="habilidades"
+                            htmlFor="habilidade"
                           >
                             Habilidades:
                           </label>
                           <select
                             className={`${
-                              errors.habilidades
+                              errors.habilidade
                                 ? "input-error"
                                 : "border-gray-300"
                             } border-2 p-2 rounded w-full`}
-                            {...register("habilidades")}
-                            id="habilidades"
+                            {...register("habilidade")}
+                            id="habilidade"
                           >
                             <option value="" disabled>
                               Selecionar
@@ -416,9 +417,9 @@ const CadastroUsuario: React.FC = () => {
                               </option>
                             ))}
                           </select>
-                          {errors?.habilidades && (
+                          {errors?.habilidade && (
                             <p className={erroStyle}>
-                              {errors.habilidades.message}
+                              {errors.habilidade.message}
                             </p>
                           )}
                         </div>
