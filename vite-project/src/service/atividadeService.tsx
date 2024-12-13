@@ -27,7 +27,7 @@ function AtividadeService() {
     return api.put(`/atividades/${id}`, payload);
   }
 
-  async function exibirMinhasAtividades({ id }: AtividadeFiltro) {
+  async function MinhasAtividades({ id }: AtividadeFiltro) {
     return api.get(`/atividades/minhas-atividades/${id}`);
   }
 
@@ -52,7 +52,7 @@ function AtividadeService() {
     exibirAtividadePorId,
     deletarAtividadePorId,
     atualizarAtividadePorId,
-    exibirMinhasAtividades,
+    MinhasAtividades,
     exibirAtividadesPendentes,
     exibirAtividadesRejeitadas,
     exibirAtividadesConfirmadas,
