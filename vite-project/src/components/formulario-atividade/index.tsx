@@ -5,8 +5,21 @@ import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
+import Botao from "../botaoComponente";
+import AtividadeService from "../../service/atividadeService";
 
-const errorValidator = (data) =>
+
+interface FormData {
+  nomeAtividade: string;
+  descricaoAtividade: string;
+  dataEncontro: string;
+  horario: string;
+  tipoEncontro: "ONLINE" | "PRESENCIAL";
+  endereco?: string;
+}
+
+
+const errorValidator = (data: string) =>
   toast(`${data}`, {
     position: "top-right",
     autoClose: 1500,
@@ -15,11 +28,10 @@ const errorValidator = (data) =>
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    progress: undefined,
     theme: "light",
   });
 
-const successValidation = (data) =>
+const successValidation = (data: string) =>
   toast(`${data}`, {
     position: "top-right",
     autoClose: 1500,
@@ -28,14 +40,18 @@ const successValidation = (data) =>
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    progress: undefined,
     theme: "light",
   });
 
-const FormComponent = () => {
-   const [confirmada,setConfirmada]=useState(false)
-   const [rejeitada,setRejeitada]=useState(false)
-   const [finalizada,setFinalizada]=useState(false)
+const FormComponent: React.FC = () => {
+  const { salvarAtividade, atualizarAtividadePorId, deletarAtividadePorId } =
+    AtividadeService();
+
+  const [confirmada, setConfirmada] = useState(false);
+  const [rejeitada, setRejeitada] = useState(false);
+  const [finalizada, setFinalizada] = useState(false);
+
+
   const validationSchema = z.object({
     nomeAtividade: z
       .string()
@@ -47,7 +63,7 @@ const FormComponent = () => {
       .string()
       .nonempty({ message: "A data do encontro é obrigatória" }),
     horario: z.string().nonempty({ message: "O horário é obrigatório" }),
-    tipoEncontro: z.enum(["VIRTUAL", "PRESENCIAL"], {
+    tipoEncontro: z.enum(["ONLINE", "PRESENCIAL"], {
       message: "Selecione o tipo de encontro",
     }),
     endereco: z.string().optional(),
@@ -58,23 +74,21 @@ const FormComponent = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
       nomeAtividade: "",
       descricaoAtividade: "",
       dataEncontro: "",
       horario: "",
-      tipoEncontro: "VIRTUAL",
+      tipoEncontro: "ONLINE",
       endereco: "",
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: async (data) => {
-      console.log("Payload enviado:", data);
-      return Promise.resolve();
-    },
+  
+  const mutationPost = useMutation({
+    mutationFn: salvarAtividade,
     onSuccess: () => {
       reset();
       successValidation("Atividade criada com sucesso!");
@@ -84,23 +98,30 @@ const FormComponent = () => {
     },
   });
 
-  const onSubmit = (data) => {
-  const payload={
-  "rejeitada":rejeitada,
-  "confirmada":confirmada,
-  "finalizada":finalizada,
-    }
-    mutation.mutate(data);
+
+  
+  const handlePost = (data: FormData) => {
+    const payload = { ...data, confirmada, rejeitada, finalizada };
+    mutationPost.mutate(payload);
   };
 
+
+
   const erroStyle = "text-red-600 text-left text-[12px]";
+
+  function handleConfirmar(): void {
+    setConfirmada(true)
+  }
+  function handleRejeitada(): void {
+    setRejeitada(true)
+  }
 
   return (
     <>
       <ToastContainer />
-      <form className=" w-full h-auto" onSubmit={handleSubmit(onSubmit)}>
+      <form className="w-full h-auto" onSubmit={handleSubmit(handlePost)}>
         <h1 className="text-2xl font-bold mb-4 text-center text-blue-700">
-          Criar Atividade
+          Criar/Atualizar Atividade
         </h1>
         <div className="mb-4">
           <label
@@ -126,114 +147,8 @@ const FormComponent = () => {
           )}
         </div>
 
-        <div className="grid  gap-2 grid-cols-2 mb-4">
-          <div>
-            <label
-              htmlFor="dataEncontro"
-              className={`${
-                errors.dataEncontro
-                  ? "border-red-500 text-red-500"
-                  : "border-gray-300"
-              }`}
-            >
-              Data do Encontro
-            </label>
-            <input
-              type="date"
-              id="dataEncontro"
-              {...register("dataEncontro")}
-              className={`border-2 p-2 rounded w-full ${
-                errors.dataEncontro ? "input-error" : "border-gray-300"
-              }`}
-            />
-            {errors?.dataEncontro && (
-              <p className={erroStyle}>{errors.dataEncontro.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="horario"
-              className={`${
-                errors.horario
-                  ? "border-red-500 text-red-500"
-                  : "border-gray-300"
-              }`}
-            >
-              Horário
-            </label>
-            <input
-              type="time"
-              id="horario"
-              {...register("horario")}
-              className={`border-2 p-2 rounded w-full ${
-                errors.horario ? "input-error" : "border-gray-300"
-              }`}
-            />
-            {errors?.horario && (
-              <p className={erroStyle}>{errors.horario.message}</p>
-            )}
-          </div>
-        </div>
-        <div className="mb-4 grid  gap-2 grid-cols-2">
-          <div>
-            <label
-              htmlFor="tipoEncontro"
-              className={`${
-                errors.tipoEncontro
-                  ? "border-red-500 text-red-500"
-                  : "border-gray-300"
-              }`}
-            >
-              Tipo de Encontro
-            </label>
-            <select
-              id="tipoEncontro"
-              {...register("tipoEncontro")}
-              className={`border-2 p-2 rounded w-full ${
-                errors.tipoEncontro ? "input-error" : "border-gray-300"
-              }`}
-            >
-              <option value="VIRTUAL">Virtual</option>
-              <option value="PRESENCIAL">Presencial</option>
-            </select>
-            {errors?.tipoEncontro && (
-              <p className={erroStyle}>{errors.tipoEncontro.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="endereco"
-              className={`${
-                errors.endereco
-                  ? "border-red-500 text-red-500"
-                  : "border-gray-300"
-              }`}
-            >
-              Endereço (opcional)
-            </label>
-            <input
-              type="text"
-              id="endereco"
-              {...register("endereco")}
-              className={`border-2 p-2 rounded w-full ${
-                errors.endereco ? "input-error" : "border-gray-300"
-              }`}
-            />
-          </div>
-        </div>
         <div className="mb-4">
-          <label
-            htmlFor="descricaoAtividade"
-            className={`${
-              errors.descricaoAtividade
-                ? "border-red-500 text-red-500"
-                : "border-gray-300"
-            }`}
-          >
-            Descrição da Atividade
-          </label>
+          <label htmlFor="descricaoAtividade">Descrição da Atividade</label>
           <textarea
             id="descricaoAtividade"
             {...register("descricaoAtividade")}
@@ -245,13 +160,83 @@ const FormComponent = () => {
             <p className={erroStyle}>{errors.descricaoAtividade.message}</p>
           )}
         </div>
-        <button
-          className="bg-buttonBlue p-2 w-full mt-4 text-white rounded-md hover:opacity-80"
-          type="submit"
-        >
-          Registrar Atividade
-        </button>
+
+        <div className="mb-4">
+          <label htmlFor="dataEncontro">Data do Encontro</label>
+          <input
+            type="date"
+            id="dataEncontro"
+            {...register("dataEncontro")}
+            className={`border-2 p-2 rounded w-full ${
+              errors.dataEncontro ? "input-error" : "border-gray-300"
+            }`}
+          />
+          {errors?.dataEncontro && (
+            <p className={erroStyle}>{errors.dataEncontro.message}</p>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="horario">Horário</label>
+          <input
+            type="time"
+            id="horario"
+            {...register("horario")}
+            className={`border-2 p-2 rounded w-full ${
+              errors.horario ? "input-error" : "border-gray-300"
+            }`}
+          />
+          {errors?.horario && (
+            <p className={erroStyle}>{errors.horario.message}</p>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="tipoEncontro">Tipo de Encontro</label>
+          <select
+            id="tipoEncontro"
+            {...register("tipoEncontro")}
+            className="border-2 p-2 rounded w-full border-gray-300"
+          >
+            <option value="ONLINE">ONLINE</option>
+            <option value="PRESENCIAL">Presencial</option>
+          </select>
+          {errors?.tipoEncontro && (
+            <p className={erroStyle}>{errors.tipoEncontro.message}</p>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="endereco">Endereço (Opcional)</label>
+          <input
+            type="text"
+            id="endereco"
+            {...register("endereco")}
+            className="border-2 p-2 rounded w-full border-gray-300"
+          />
+        </div>
+
+
+        <Botao
+          tipo="criar"
+          onClick={handleSubmit(handlePost)}
+          buttonType="submit"
+        />
       </form>
+
+    <div>
+      <Botao
+        tipo="confirmar"
+        onClick={handleConfirmar}
+        buttonType="button"
+      />
+
+      <Botao
+        tipo="rejeitar"
+        onClick={handleRejeitada}
+        buttonType="button"
+      />
+    </div>
     </>
   );
 };

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import FormComponent from "../../components/formulario-atividade";
 import Modal from "../../components/modal";
 
@@ -18,6 +19,9 @@ const handleCloseModal = () => {
           />
 
       </Modal>
+      <button onClick={handleOpenModal}className="bg-red">
+        Adicionar
+      </button>
       {/* <ProfileCardComponents/> */}
     </div>
   );
