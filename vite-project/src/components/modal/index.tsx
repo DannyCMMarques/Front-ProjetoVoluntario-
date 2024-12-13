@@ -19,7 +19,7 @@ const Modal = ({ isOpen, children, onClose, size }: ModalProps) => {
   switch (size) {
     case "small":
       contentClass =
-        "bg-white  rounded-lg shadow-lg fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[600px] max-h-[42rem] overflow-auto p-4 ";
+        "bg-white h-auto rounded-lg shadow-lg fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[70%] md:w-[500px] max-h-[42rem] overflow-auto p-4 ";
       break;
     case "medium":
       contentClass =

@@ -5,5 +5,11 @@ export  interface ModalProps {
     children: ReactNode;
     onClose: unknown;
     size: unknown;
-    categoria: unknown | never;
   }
+
+
+  export type BotaoProps = {
+    tipo: "criar" | "confirmar" | "rejeitar" | "editar";
+    onClick: () => void;
+    buttonType?: "button" | "submit";
+  };
