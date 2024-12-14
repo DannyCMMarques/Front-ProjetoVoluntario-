@@ -1,0 +1,39 @@
+const MenuContents = (icons) => {
+  const menuItems = [
+    {
+      id: "home",
+      icon: icons.home,
+      label: "Home",
+      submenus: [],
+    },
+    {
+      id: "usuarios",
+      icon: icons.users,
+      label: "Usuários",
+      submenus: [
+        {
+          id: "meu-perfil",
+          label: "Meu Perfil",
+        },
+        {
+          id: "voluntarios",
+          label: "Voluntários",
+        },
+        {
+          id: "idoso",
+          label: "Idoso",
+        },
+      ],
+    },
+    {
+      id: "agenda",
+      icon: icons.calendar,
+      label: "Agenda",
+      submenus: [],
+    },
+  ];
+
+  return menuItems;
+};
+
+export default MenuContents;

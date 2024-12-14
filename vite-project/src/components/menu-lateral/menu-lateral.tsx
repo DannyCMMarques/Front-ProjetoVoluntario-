@@ -1,120 +1,183 @@
+import { useEffect, useState } from "react";
+import { BsCalendarHeartFill, BsPersonHeart } from "react-icons/bs";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { RiHomeHeartFill } from "react-icons/ri";
-
-import { useContext, useEffect } from "react";
-import { BiSolidCalendarHeart, BiSolidLogOut } from "react-icons/bi";
-import { BsPersonHeart } from "react-icons/bs";
-import { FaUserEdit } from "react-icons/fa";
-import { MdVolunteerActivism } from "react-icons/md";
-import MenuContents from "../../utils/content/MenuContents";
-import { ThemeContext } from "./../../utils/context/ThemeContext/ThemeContext";
+import { useNavigate } from "react-router-dom";
+import MenuContents from "./../../utils/mocks/menu/MenuContents";
 
 const SideMenu = () => {
-  const { isOpen, toggle, setIsOpen, setToggle } = useContext(ThemeContext);
+  const [isExpanded, setIsExpanded] = useState(window.innerWidth > 768);
+  const [selectedMenu, setSelectedMenu] = useState("");
+  const [selectedSubmenu, setSelectedSubmenu] = useState("");
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
+  const [shouldRenderText, setShouldRenderText] = useState(false);
 
-  const menuCardContent = MenuContents({
+  const menuItems = MenuContents({
     home: <RiHomeHeartFill />,
-    dados: <FaUserEdit />,
-    voluntarios: <MdVolunteerActivism />,
-    idosos: <BsPersonHeart />,
-    atividades: <BiSolidCalendarHeart />,
+    users: <BsPersonHeart />,
+    calendar: <BsCalendarHeartFill />,
   });
-
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 760) {
-        setIsOpen(true);
-        setToggle(true);
-      } else {
-        setIsOpen(false);
-        setToggle(false);
+    if (isExpanded) {
+      const timeout = setTimeout(() => setShouldRenderText(true), 100);
+      if (selectedMenu) {
+        setIsSubmenuOpen(true);
       }
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize();
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, [setIsOpen, setToggle]);
-
-  const toggleSideMenu = () => {
-    if (window.innerWidth > 760) {
-      setIsOpen(!isOpen);
-    }
-  };
-
-  const handleNavegar = (href) => {
-    if (href !== "/sair") {
-      window.location.href = href;
+      return () => clearTimeout(timeout);
     } else {
-      localStorage.removeItem("access_token");
-      window.location.href = "/";
+      setShouldRenderText(false);
+      setIsSubmenuOpen(false);
+    }
+  }, [isExpanded, selectedMenu]);
+  const navigate = useNavigate();
+
+  const toggleMenu = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleMenuClick = (menuId) => {
+    if (selectedMenu === menuId) {
+      setSelectedMenu("");
+      setIsSubmenuOpen(false);
+      setSelectedSubmenu("");
+    } else {
+      setSelectedMenu(menuId);
+      setIsSubmenuOpen(true);
+      setSelectedSubmenu("");
     }
   };
 
+  const handleSubmenuClick = (submenuId) => {
+    setSelectedSubmenu(submenuId);
+  };
+  const handleNavigate = (link, isSubmenu = false) => {
+    if (isSubmenu) {
+      navigate(link);
+    } else {
+      navigate(link);
+      if (selectedMenu === link) {
+        setIsSubmenuOpen(false);
+        setSelectedSubmenu("");
+      } else {
+        setIsSubmenuOpen(true);
+        setSelectedSubmenu("");
+    }
+  };
+}
   return (
-    <div className="mr-7">
+    <div className="flex h-screen">
       <div
-        className={`fixed top-0 left-0 h-full bg-white shadow-md transition-all duration-200 ${
-          isOpen ? "w-20" : "w-44"
+        className={`bg-white border-r border-gray-300 transition-all duration-300 relative ${
+          isExpanded ? "w-48" : "w-24"
         }`}
       >
+        <button
+          onClick={toggleMenu}
+          className="absolute top-4 right-[-12px] bg-[#3a4dff] text-white text-xs font-bold w-5 h-5 flex justify-center items-center rounded-full shadow-md"
+        >
+          {isExpanded ? (
+            <span className="text-[12px]">
+              <MdChevronLeft />
+            </span>
+          ) : (
+            <span className="text-[12px]">
+              <MdChevronRight />
+            </span>
+          )}
+        </button>
+
         <div
-          className="flex justify-center items-center cursor-pointer mt-3"
-          onClick={() => (!toggle ? toggleSideMenu() : undefined)}
+          className={`flex items-center justify-center mt-8 transition-all duration-300 `}
         >
           <img
-            className={isOpen ? "w-52" : "w-28"}
             src="imagens/logo.png"
-            alt="Icon"
+            alt="logo"
+            className={`${isExpanded ? "w-[100px]" : "w-[80px]"}`}
           />
         </div>
-        <ul className="mt-4">
-          {menuCardContent.map((item) => (
-            <li
-              key={item.id}
-              className="flex items-center justify-center gap-4 p-2 hover:bg-gradient-to-r hover:from-teal-500 hover:to-blue-500 cursor-pointer transition-all"
-            >
-              <a
-                onClick={() => handleNavegar(item.href)}
-                className="flex items-center gap-4 w-full group"
+
+        <div className="mt-10">
+          {menuItems.map((menu) => (
+            <div key={menu.id}>
+              <div
+                className={`flex items-center py-2 px-4 gap-3 cursor-pointer hover:bg-gray relative ${
+                  selectedMenu === menu.id ? "bg-white" : ""
+                } ${isExpanded ? "justify-start" : "justify-center"}`}
+                onClick={() => handleMenuClick(menu.id)}
               >
-                <div
-                  className={`flex items-center justify-around w-full gap-5 text-blue-500 text-2xl group-hover:text-white ${
-                    isOpen ? "ml-0 text-[25px]" : " ml-3 text-2xl"
+                <span
+                  onClick={
+                    !isExpanded ? () => handleNavigate(menu.id) : undefined
+                  }
+                  className={`flex items-center text-[#1225d8] ${
+                    isExpanded ? "text-[20px]" : "text-[25px]"
                   }`}
                 >
-                  <p>{item.icones}</p>
-                  {!isOpen && (
-                    <p className="text-gray-500 text-base font-medium w-full  group-hover:text-white">
-                      {item.titulo}
-                    </p>
-                  )}
-                </div>
-              </a>
-            </li>
-          ))}
-          <li className="fixed bottom-3 flex items-center justify-center gap-4 p-2 hover:bg-gradient-to-r hover:from-teal-500 hover:to-blue-500 cursor-pointer transition-all">
-            <a
-              onClick={() => handleNavegar("/sair")}
-              className="flex items-center gap-4 w-full group"
-            >
-              <div
-                className={`flex items-center justify-around w-full gap-5 text-blue-500 text-2xl group-hover:text-white ${
-                  isOpen ? "ml-1 text-[30px]" : " ml-3 text-2xl"
-                }`}
-              >
-                <p>
-                  <BiSolidLogOut />
-                </p>
-                {!isOpen && (
-                  <p className="text-gray-500 text-base font-medium w-full group-hover:text-white">
-                    Log Out
+                  {menu.icon}
+                </span>
+
+                {shouldRenderText && (
+                  <p
+                    className={`text-gray-700 transform transition-all duration-300 ${
+                      isExpanded
+                        ? "opacity-100 translate-x-0"
+                        : "opacity-0 translate-x-[-10px]"
+                    } ${
+                      selectedMenu === menu.id ? "font-bold" : "font-medium"
+                    }`}
+                    onClick={menu.id !=="usuarios" ? () => handleNavigate(menu.id) : undefined}
+
+                  >
+                    {menu.label}
                   </p>
                 )}
+                {selectedMenu === menu.id && (
+                  <span
+                    className={`absolute right-0 bg-blue-700 w-[3px] animate-grow rounded-full`}
+                  ></span>
+                )}
               </div>
-            </a>
-          </li>
-        </ul>
+
+              {menu.submenus && menu.submenus.length > 0 && (
+                <div
+                  className={`transition-all duration-300 overflow-hidden ${
+                    selectedMenu === menu.id && isSubmenuOpen
+                      ? "max-h-40"
+                      : "max-h-0"
+                  }`}
+                >
+                  <div className="pl-14">
+                    {menu.submenus.map((submenu) => (
+                      <div
+                        key={submenu.id}
+                        className={`flex items-center py-2 px-1 text-[14px] cursor-pointer hover:bg-gray-50 transform transition-all duration-100 ${
+                          isExpanded
+                            ? "opacity-100 translate-x-0"
+                            : "opacity-0 translate-x-[-10px]"
+                        } ${
+                          selectedSubmenu === submenu.id
+                            ? "text-[#9a89ff]"
+                            : "text-gray-700"
+                        }`}
+                        onClick={() => handleSubmenuClick(submenu.id)}
+                      >
+                        <span className="text-[14px]">
+                          {" "}
+                          <MdChevronRight />
+                        </span>
+                        <span
+  onClick={() => handleNavigate(submenu.id, true)}
+>
+  {submenu.label}
+</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
