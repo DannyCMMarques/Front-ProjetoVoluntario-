@@ -1,4 +1,4 @@
-import { BotaoProps } from "../../utils/interfaces/ModalProps";
+import { BotaoProps } from "../../utils/interfaces/ComponenteProps";
 
 
   const Botao: React.FC<BotaoProps> = ({ tipo, onClick, buttonType = "button" }) => {

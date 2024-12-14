@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { ModalProps } from "./../../utils/interfaces/ModalProps";
+import { ModalProps } from "./../../utils/interfaces/ComponenteProps";
 const Modal = ({ isOpen, children, onClose, size }: ModalProps) => {
   const [modalOpen, setModalOpen] = useState(isOpen);
 
