@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react"; 
-import AtividadeService from "../../service/atividadeService";
 import { useMutation } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import AtividadeService from "../../service/atividadeService";
 
-const atividadeService = AtividadeService();
 
 const Atividades = () => {
 
   const [atividades, setAtividades] = useState([]);
-  const [idUsuario, setIdUsuario] = useState(1); 
+  const [idUsuario, setIdUsuario] = useState(1);
 
+const atividadeService = AtividadeService();
 
   const handleGetMinhasAtividades = async (id: number) => {
     try {
       const response = await atividadeService.MinhasAtividades({ id });
-      setAtividades(response.data);  
+      setAtividades(response.data);
       console.log("Minhas Atividades:", response.data);
     } catch (error) {
       console.error("Erro ao obter minhas atividades:", error);
@@ -23,7 +23,7 @@ const Atividades = () => {
 
   useEffect(() => {
     handleGetMinhasAtividades(idUsuario);
-  }, [idUsuario]);  
+  }, [idUsuario]);
 
 
   const handlePut = (id: number, data: object) => {
