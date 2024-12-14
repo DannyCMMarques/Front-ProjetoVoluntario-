@@ -18,9 +18,9 @@ function App() {
       {menuLateralVisivel ? (
         <Layout>
           <Routes>
-            <Route path="/inicio" element={<Dashboard />} />
-            <Route path="/usuario" element={<Usuarios />} />
-            <Route path="/idosos" element={<ListaUsuarios />} />
+            <Route path="/home" element={<Dashboard />} />
+            <Route path="/meu-perfil" element={<Usuarios />} />
+            <Route path="/idoso" element={<ListaUsuarios />} />
             <Route path="/voluntarios" element={<ListaUsuarios />} />
             <Route path="/agenda" element={<Atividades />} />
           </Routes>
