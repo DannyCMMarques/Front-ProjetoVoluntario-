@@ -16,55 +16,14 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<CadastroUsuario />} />
-
-          <Route
-            path="/home"
-            element={
-              <Layout>
-               <Dashboard/>
-              </Layout>
-            }
-          />
-          <Route
-            path="/usuario"
-            element={
-              <Layout>
-                <Usuarios />
-              </Layout>
-            }
-          />
-          <Route
-            path="/usuario/*"
-            element={
-              <Layout>
-                <Usuarios />
-              </Layout>
-            }
-          />
-          <Route
-            path="/idosos"
-            element={
-              <Layout>
-                <ListaUsuarios />
-              </Layout>
-            }
-          />
-          <Route
-            path="/voluntarios"
-            element={
-              <Layout>
-                <ListaUsuarios />
-              </Layout>
-            }
-          />
-          <Route
-            path="/minhas-atividades"
-            element={
-              <Layout>
-                <Atividades />
-              </Layout>
-            }
-          />
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Dashboard />} />
+            <Route path="/usuario" element={<Usuarios />} />
+            <Route path="/usuario/*" element={<Usuarios />} />
+            <Route path="/idosos" element={<ListaUsuarios />} />
+            <Route path="/voluntarios" element={<ListaUsuarios />} />
+            <Route path="/minhas-atividades" element={<Atividades />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
