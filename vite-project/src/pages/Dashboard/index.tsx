@@ -6,8 +6,11 @@ const Dashboard = () => {
     <div>
     <ContainerItem>
       <div>
-        <div className="flex gap-3 flex-wrap">
-          <p className="font-bold text-2xl">Dashboard</p>
+        <div>
+        <p className="font-bold text-2xl">Dashboard</p>
+        </div>
+        <div className="flex gap-3 flex-wrap mt-4">
+
         </div>
       </div>
     </ContainerItem>

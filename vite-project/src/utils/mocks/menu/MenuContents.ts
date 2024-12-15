@@ -16,7 +16,7 @@ const MenuContents = (icons) => {
           label: "Meu Perfil",
         },
         {
-          id: "voluntarios",
+          id: "voluntario",
           label: "Voluntários",
         },
         {

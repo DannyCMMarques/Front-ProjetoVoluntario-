@@ -1,37 +1,41 @@
-import useApiInterceptor from './intercerptor';
-
-interface UsuarioFiltro {
-  tipo: string;
-}
-
-interface UsuarioId {
-  id: number;
-}
+import { UsuarioId } from "../utils/interfaces/ServiceProps";
+import useApiInterceptor from "./intercerptor";
 
 function UsuarioService() {
   const api = useApiInterceptor();
-   console.log(api);
-  async function cadastrarUsuario(payload:object) {
-    return api.post("/usuarios", payload);
+  const urlBase ="/usuarios"
+
+  async function cadastrarUsuario(payload: object) {
+    return api.post(urlBase, payload);
   }
 
-  async function filtrarUsuariosTipo({ tipo }: UsuarioFiltro) {
-    return api.get(`/usuarios`, { params: { tipo } });
-}
+  async function filtrarUsuariosTipo(tipo: string) {
+    return api.get(`${urlBase}`, { params: { tipo } });
+  }
 
   async function exibirUsuarioPorId({ id }: UsuarioId) {
-    return api.get(`/usuarios/${id}`);
+    return api.get(`${urlBase}/${id}`);
   }
 
-  async function excluirUsuariosPorId({id}: UsuarioId) {
-    return api.delete(`/usuarios/${id}`)
+  async function exibirUsuarioConectado() {
+    return api.get(`${urlBase}/listaUsuario`);
+  }
+  async function excluirUsuariosPorId({ id }: UsuarioId) {
+    return api.delete(`${urlBase}/${id}`);
   }
 
-  async function atualizarUsuarioPorId(id: number , payload :object) {
-    return api.put(`/usuarios/${id}`,payload);
+  async function atualizarUsuarioPorId(id: number, payload: object) {
+    return api.put(`${urlBase}/${id}`, payload);
   }
 
-  return { cadastrarUsuario, filtrarUsuariosTipo, exibirUsuarioPorId, excluirUsuariosPorId, atualizarUsuarioPorId };
+  return {
+    cadastrarUsuario,
+    filtrarUsuariosTipo,
+    exibirUsuarioPorId,
+    excluirUsuariosPorId,
+    atualizarUsuarioPorId,
+    exibirUsuarioConectado,
+  };
 }
 
 export default UsuarioService;

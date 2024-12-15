@@ -5,9 +5,7 @@ import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
-import Botao from "../botaoComponente";
 import AtividadeService from "../../service/atividadeService";
-
 
 interface FormData {
   nomeAtividade: string;
@@ -16,8 +14,9 @@ interface FormData {
   horario: string;
   tipoEncontro: "ONLINE" | "PRESENCIAL";
   endereco?: string;
+  usuario: any;
+  usuarioSelecionado: any;
 }
-
 
 const errorValidator = (data: string) =>
   toast(`${data}`, {
@@ -43,14 +42,13 @@ const successValidation = (data: string) =>
     theme: "light",
   });
 
-const FormComponent: React.FC = () => {
+const FormComponent: React.FC = ({podeAgendar, usuario, usuarioSelecionado, idAtividade}) => {
   const { salvarAtividade, atualizarAtividadePorId, deletarAtividadePorId } =
     AtividadeService();
 
   const [confirmada, setConfirmada] = useState(false);
   const [rejeitada, setRejeitada] = useState(false);
   const [finalizada, setFinalizada] = useState(false);
-
 
   const validationSchema = z.object({
     nomeAtividade: z
@@ -86,7 +84,6 @@ const FormComponent: React.FC = () => {
     },
   });
 
-  
   const mutationPost = useMutation({
     mutationFn: salvarAtividade,
     onSuccess: () => {
@@ -98,22 +95,34 @@ const FormComponent: React.FC = () => {
     },
   });
 
+  const editar = useMutation({
+    mutationFn: salvarAtividade,
+    onSuccess: () => {
+      reset();
+      successValidation("Atividade criada com sucesso!");
+    },
+    onError: () => {
+      errorValidator("Erro ao criar atividade!");
+    },
+  });
 
-  
   const handlePost = (data: FormData) => {
-    const payload = { ...data, confirmada, rejeitada, finalizada };
-    mutationPost.mutate(payload);
+
+    const payload = { ...data, confirmada, rejeitada, finalizada, usuarioConvidado: {idUsuario: usuarioSelecionado.idUsuario}, usuarioCriador: {idUsuario:usuario.idUsuario} };
+    if (idAtividade) {
+      editar.mutate(payload);
+    } else {
+      mutationPost.mutate(payload);
+    }
   };
-
-
 
   const erroStyle = "text-red-600 text-left text-[12px]";
 
   function handleConfirmar(): void {
-    setConfirmada(true)
+    setConfirmada(true);
   }
   function handleRejeitada(): void {
-    setRejeitada(true)
+    setRejeitada(true);
   }
 
   return (
@@ -121,7 +130,7 @@ const FormComponent: React.FC = () => {
       <ToastContainer />
       <form className="w-full h-auto" onSubmit={handleSubmit(handlePost)}>
         <h1 className="text-2xl font-bold mb-4 text-center text-blue-700">
-          Criar/Atualizar Atividade
+          {idAtividade ? "Editar" : "Criar"} Atividade
         </h1>
         <div className="mb-4">
           <label
@@ -216,27 +225,21 @@ const FormComponent: React.FC = () => {
           />
         </div>
 
-
-        <Botao
-          tipo="criar"
-          onClick={handleSubmit(handlePost)}
-          buttonType="submit"
-        />
+        <div className="w-full flex gap-3">
+          <p
+            onClick={handleSubmit(handlePost)}
+            className="p-3 w-full bg-green-400 text-white text-center rounded-md hover:opacity-70 cursor-pointer duration-100"
+          >
+            {podeAgendar ? "Criar" : "Aceitar"}
+          </p>
+          <p
+            className="p-3 bg-red-400 text-white w-full text-center rounded-md hover:opacity-70 cursor-pointer duration-100"
+            onClick={handleRejeitada}
+          >
+            Cancelar
+          </p>
+        </div>
       </form>
-
-    <div>
-      <Botao
-        tipo="confirmar"
-        onClick={handleConfirmar}
-        buttonType="button"
-      />
-
-      <Botao
-        tipo="rejeitar"
-        onClick={handleRejeitada}
-        buttonType="button"
-      />
-    </div>
     </>
   );
 };

@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html{
-  background-color: #f4f7fe !important;
-}
 input,
 textarea {
   width: 100% !important;
@@ -33,7 +30,7 @@ select {
 input.input-error,
 textarea.input-error,
 select.input-error {
-  border-color: #ff4d4f !important; /* Borda vermelha para indicar erro */
+  border-color: #ff4d4f !important;
   box-shadow: 0 0 4px rgba(255, 77, 79, 0.5);
 }
 
@@ -51,4 +48,13 @@ label {
   font-size: 14px;
   color: #666;
   margin-top: 10px;
+}
+
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
 }

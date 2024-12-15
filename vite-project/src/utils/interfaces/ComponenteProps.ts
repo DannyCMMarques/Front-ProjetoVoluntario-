@@ -25,3 +25,11 @@ export  interface ModalProps {
  export  interface ChildrenProps {
     children: React.ReactNode;
   }
+  export default interface FormData {
+    nomeAtividade: string;
+    descricaoAtividade: string;
+    dataEncontro: string;
+    horario: string;
+    tipoEncontro: "ONLINE" | "PRESENCIAL";
+    endereco?: string;
+  }

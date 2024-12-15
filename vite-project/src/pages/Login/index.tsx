@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
-import ContainerItem from "../../components/container";
 import AuthService from "./../../service/authService";
 
 const errorValidator = (data: string) =>
@@ -53,7 +52,13 @@ const Login = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: login,
+    mutationFn: async (data) => {
+      const response = await login(data);
+      console.log(response);
+      if (response) {
+        localStorage.setItem("access_token", response.data);
+      }
+    },
     onSuccess: () => {
       reset();
       successValidation("Usuário cadastrado com sucesso!");
@@ -81,7 +86,6 @@ const Login = () => {
   return (
     <div className="h-screen">
       <ToastContainer />
-      <ContainerItem>
         <div className="bg-white rounded-lg w-full h-full md:flex justify-center">
           <div className="w-full h-full flex justify-center items-center">
             <div className="w-4/6">
@@ -97,7 +101,9 @@ const Login = () => {
                 <div>
                   <label
                     htmlFor="email"
-                    className={`${errors.email ? "text-red-500" : "text-[#666]"}`}
+                    className={`${
+                      errors.email ? "text-red-500" : "text-[#666]"
+                    }`}
                   >
                     Email:
                   </label>
@@ -117,7 +123,9 @@ const Login = () => {
                 <div>
                   <label
                     htmlFor="senha"
-                    className={`${errors.senha ? "text-red-500" : "text-[#666]"}`}
+                    className={`${
+                      errors.senha ? "text-red-500" : "text-[#666]"
+                    }`}
                   >
                     Senha:
                   </label>
@@ -156,7 +164,6 @@ const Login = () => {
           </div>
           <div className="bg-buttonBlue w-full"></div>
         </div>
-      </ContainerItem>
     </div>
   );
 };
