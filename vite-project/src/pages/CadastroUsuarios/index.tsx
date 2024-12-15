@@ -140,8 +140,6 @@ const CadastroUsuario: React.FC = () => {
       habilidade: data.habilidade,
       foto: data.foto,
     };
-    console.log(payload);
-
     mutation.mutate(payload);
   };
 

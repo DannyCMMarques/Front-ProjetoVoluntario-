@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import CardAtividadeComponent from "../../components/card-atividade";
 import ContainerItem from "../../components/container";
+import Modal from "../../components/modal";
+import ModalConfirmaRejeita from "../../components/modal-confirm-reject";
 import AtividadeService from "../../service/atividadeService";
 import { AuthContext } from "../../utils/context/useContext/useUserContext";
 
@@ -8,8 +10,11 @@ const Atividades = () => {
   const [atividades, setAtividades] = useState([]);
   const { userData } = useContext(AuthContext);
   const [filtro, setFiltro] = useState("Todas");
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const atividadeService = AtividadeService();
+  const [confirma, setConfirma] = useState(false)
+  const [titulo, setTitulo] = useState("")
+  const [idAtividade, setIdAtividade] = useState(null)
 
   const handleGetAtividades = async (id: number, filtro: string) => {
     try {
@@ -54,8 +59,27 @@ const Atividades = () => {
 
   const filtros = ["Todas", "Pendentes", "Aceitas", "Rejeitadas", "Concluidas"];
 
+  const fecharModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const abrirModal = (confirma, titulo, idAtividade) => {
+    setConfirma(confirma)
+    setTitulo(titulo)
+    setIdAtividade(idAtividade)
+    setIsModalOpen(true);
+  };
+
+  const refreshAtividades = () => {
+    handleGetAtividades(userData.idUsuario, "Todas")
+    fecharModal()
+  }
+
   return (
     <div>
+      <Modal isOpen={isModalOpen} onClose={fecharModal} size="small">
+          <ModalConfirmaRejeita confirma={confirma} titulo={titulo} atividade={idAtividade} refresh={() => refreshAtividades()}/>
+      </Modal>
       <ContainerItem>
         <div className="flex gap-3 items-center">
           <p className="font-bold text-2xl w-max">Atividades</p>
@@ -83,28 +107,41 @@ const Atividades = () => {
 
 
         <div className="flex gap-3 flex-wrap mt-4">
-          {atividades.map((atividade) => (
-            <CardAtividadeComponent key={atividade.id} {...atividade}
-            status={
-              atividade.finalizada
-                ? "Concluída"
-                : atividade.rejeitada
-                ? "Rejeitada"
-                : atividade.confirmada
-                ? "Aceita"
-                : "Pendente"
-            }
-            titulo={atividade.nomeAtividade}
-             descricao={atividade.descricaoAtividade}
-             criador={atividade.usuarioCriador}
-             convidado={atividade.usuarioConvidado}
-             criadaEm={atividade.dataCadastro}
-             dataEncontro={atividade.dataEncontro}
-             horarioo={atividade.horario}
-             local={atividade.endereco}
-             idUsuario={userData?.idUsuario}
-            />
-          ))}
+          {atividades.length === 0 ? (
+            <>
+            <div className="bg-gray-100 text-center p-6 w-full">
+              <p>Nenhuma atividade disponivel</p>
+            </div>
+            </>
+          ) : (
+            <>
+            {atividades.map((atividade) => (
+              <CardAtividadeComponent key={atividade.id_atividade} {...atividade}
+              status={
+                atividade.finalizada
+                  ? "Concluída"
+                  : atividade.rejeitada
+                  ? "Rejeitada"
+                  : atividade.confirmada
+                  ? "Aceita"
+                  : "Pendente"
+              }
+              titulo={atividade.nomeAtividade}
+               descricao={atividade.descricaoAtividade}
+               criador={atividade.usuarioCriador}
+               convidado={atividade.usuarioConvidado}
+               criadaEm={atividade.dataCadastro}
+               dataEncontro={atividade.dataEncontro}
+               horarioo={atividade.horario}
+               local={atividade.endereco}
+               idUsuario={userData?.idUsuario}
+               confirma={() => abrirModal(true, atividade.nomeAtividade, atividade)}
+               rejeita={() => abrirModal(false, atividade.nomeAtividade, atividade)}
+              />
+            ))}
+            </>
+          )}
+
         </div>
       </ContainerItem>
     </div>

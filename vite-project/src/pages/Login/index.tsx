@@ -1,9 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
+import LoadingComponent from "../../components/loading";
 import AuthService from "./../../service/authService";
 
 const errorValidator = (data: string) =>
@@ -29,6 +31,7 @@ const successValidation = (data: string) =>
   });
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const { login } = AuthService();
 
   const validationSchemaLogin = z.object({
@@ -54,17 +57,21 @@ const Login = () => {
   const mutation = useMutation({
     mutationFn: async (data) => {
       const response = await login(data);
-      console.log(response);
       if (response) {
         localStorage.setItem("access_token", response.data);
       }
+
+      setTimeout(() => {
+        setIsLoading(false)
+        window.location.href = "/inicio";
+      }, 1000)
     },
     onSuccess: () => {
       reset();
       successValidation("Usuário cadastrado com sucesso!");
     },
     onError: (error) => {
-      console.log(error);
+      setIsLoading(false)
       errorValidator(error.message);
     },
   });
@@ -74,6 +81,7 @@ const Login = () => {
       email: data.email,
       senha: data.senha,
     };
+    setIsLoading(true)
     mutation.mutate(payload);
   };
 
@@ -85,6 +93,10 @@ const Login = () => {
 
   return (
     <div className="h-screen">
+      {isLoading && (
+        <LoadingComponent />
+      )}
+
       <ToastContainer />
         <div className="bg-white rounded-lg w-full h-full md:flex justify-center">
           <div className="w-full h-full flex justify-center items-center">

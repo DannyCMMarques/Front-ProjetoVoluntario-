@@ -9,6 +9,8 @@ const CardAtividadeComponent = ({
     horario,
     local,
     idUsuario,
+    confirma,
+    rejeita
   }) => {
     const getStatusStyles = () => {
       switch (status) {
@@ -17,7 +19,7 @@ const CardAtividadeComponent = ({
             bgColor: "bg-[#8B7AF038]",
             textColor: "text-[#6248FF]",
           };
-        case "Confirmada":
+        case "Aceita":
           return {
             bgColor: "bg-[#51E7C452]",
             textColor: "text-[#16AD8A]",
@@ -56,16 +58,12 @@ const CardAtividadeComponent = ({
 
     const rejeitarMensagem = (event) => {
       event.stopPropagation();
-      console.log(
-         "to do"
-      );
+      rejeita()
     };
 
     const confirmarMensagem = (event) => {
       event.stopPropagation();
-      console.log(
-         "to do"
-      );
+      confirma()
     };
 
     return (
@@ -82,31 +80,34 @@ const CardAtividadeComponent = ({
             ></div>
             <p className={`font-bold text-xs ${textColor}`}>{status}</p>
           </div>
+          {status === "Pendente" && (
           <div className="flex gap-3">
-            {idUsuario !== criador.idUsuario && (
-              <p
-                onClick={rejeitarMensagem}
-                className="flex gap-2 px-4 bg-red-500 rounded-full items-center justify-center text-white hover:opacity-80 cursor-pointer duration-100 text-sm"
-              >
-                Rejeitar
-              </p>
-            )}
+          {idUsuario !== criador.idUsuario && (
             <p
-              onClick={(event) => {
-                idUsuario === criador.idUsuario
-                  ? editarMensagem(event)
-                  : confirmarMensagem(event);
-              }}
-              className="flex gap-2 px-4 bg-emerald-400 rounded-full items-center justify-center text-white hover:opacity-80 cursor-pointer duration-100 text-sm"
+              onClick={rejeitarMensagem}
+              className="flex gap-2 px-4 bg-red-500 rounded-full items-center justify-center text-white hover:opacity-80 cursor-pointer duration-100 text-sm"
             >
-              {idUsuario === criador.idUsuario ? "Editar" : "Confirmar"}
+              Rejeitar
             </p>
-          </div>
+          )}
+          <p
+            onClick={(event) => {
+              idUsuario === criador.idUsuario
+                ? editarMensagem(event)
+                : confirmarMensagem(event);
+            }}
+            className="flex gap-2 px-4 bg-emerald-400 rounded-full items-center justify-center text-white hover:opacity-80 cursor-pointer duration-100 text-sm"
+          >
+            {idUsuario === criador.idUsuario ? "Editar" : "Confirmar"}
+          </p>
+        </div>
+          )}
+
         </div>
 
-        <div className="mt-4">
-          <p className="font-bold text-[20px]">{truncateText(titulo, 60)}</p>
-          <p className="font-normal text-[12px] text-[#656565] mt-2">
+        <div className="mt-4 truncate">
+          <p className="font-bold text-[20px] truncate">{truncateText(titulo, 60)}</p>
+          <p className="font-normal text-[12px] text-[#656565] mt-2 truncate">
             {truncateText(descricao, 100)}
           </p>
         </div>

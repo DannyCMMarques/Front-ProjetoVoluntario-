@@ -1,7 +1,6 @@
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import UsuarioService from "../../service/UsuarioService";
-import { useQueryClient } from "@tanstack/react-query";
 
 const Usuarios = () => {
   const { excluirUsuariosPorId } = UsuarioService();
@@ -49,9 +48,6 @@ const Usuarios = () => {
   });
 
   const handleDelete = (id: number) => {
- 
-
-    console.log(`Excluindo usuário com ID: ${id}`);
     mutation.mutate({ id });
   };
 

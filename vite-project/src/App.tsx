@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/layout/layout.tsx";
 import Atividades from "./pages/Atividades";
@@ -8,6 +8,26 @@ import { default as ListarUsuariosPage, default as ListaUsuarios } from "./pages
 import Login from "./pages/Login";
 import Usuarios from "./pages/Usuarios";
 import { UserProvider } from "./utils/context/useContext/useUserContext.tsx";
+
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const token = localStorage.getItem("access_token");
+
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+}
+
+function AuthOnlyRoute({ children }: { children: JSX.Element }) {
+  const token = localStorage.getItem("access_token");
+
+  if (token) {
+    return <Navigate to="/home" />;
+  }
+
+  return children;
+}
 
 function App() {
   const location = useLocation();
@@ -19,17 +39,66 @@ function App() {
       {menuLateralVisivel ? (
         <Layout>
           <Routes>
-            <Route path="/home" element={<Dashboard />} />
-            <Route path="/meu-perfil" element={<Usuarios />} />
-            <Route path="/idoso" element={<ListaUsuarios />} />
-            <Route path="/voluntario" element={<ListarUsuariosPage />} />
-            <Route path="/agenda" element={<Atividades />} />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/meu-perfil"
+              element={
+                <ProtectedRoute>
+                  <Usuarios />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/idoso"
+              element={
+                <ProtectedRoute>
+                  <ListaUsuarios />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/voluntario"
+              element={
+                <ProtectedRoute>
+                  <ListarUsuariosPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/agenda"
+              element={
+                <ProtectedRoute>
+                  <Atividades />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Layout>
       ) : (
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/cadastro" element={<CadastroUsuario />} />
+          <Route
+            path="/login"
+            element={
+              <AuthOnlyRoute>
+                <Login />
+              </AuthOnlyRoute>
+            }
+          />
+          <Route
+            path="/cadastro"
+            element={
+              <AuthOnlyRoute>
+                <CadastroUsuario />
+              </AuthOnlyRoute>
+            }
+          />
         </Routes>
       )}
     </>

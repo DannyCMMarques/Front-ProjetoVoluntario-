@@ -40,7 +40,6 @@ const ListarUsuariosPage = () => {
   const podeAgendar = userData?.tipo?.toUpperCase() !== tipo.toUpperCase();
 
   const abrirModal = (idUsuarioSelecionado: any) => {
-    console.log("ID do Usuário Selecionado:", idUsuarioSelecionado);
     setIsModalOpen(true);
     setUsuarioSelecionado(idUsuarioSelecionado);
   };
@@ -74,7 +73,7 @@ const ListarUsuariosPage = () => {
                 abrirModalUsuario={abrirModal}
                 necessidades={[]}
                 podeAgendar={podeAgendar}
-                profile=""
+                profile={item.foto}
               />
             ))}
           </div>

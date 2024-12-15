@@ -34,7 +34,6 @@ export const UserProvider = ({ children }) => {
   const fetchUserData = async () => {
     try {
       const response = await exibirUsuarioConectado();
-      console.log(response)
       setUserData(response.data);
     } catch (error) {
       console.error("Erro ao buscar usuário logado", error);
