@@ -15,9 +15,9 @@ function AtividadeService() {
     return api.post("/atividades", payload);
   }
 
-  async function exibirAtividadePorId({ id }: AtividadeId) {
-    return api.get(`/atividades/${id}`);
-  }
+  // async function exibirAtividadePorId({ id }: AtividadeId) {
+  //   return api.get(`/atividades/${id}`);
+  // }
 
   async function deletarAtividadePorId({ id }: AtividadeId) {
     return api.delete(`/atividades/${id}`);
@@ -31,32 +31,24 @@ function AtividadeService() {
     return api.get(`/atividades/minhas-atividades/${id}`);
   }
 
-  async function exibirAtividadesPendentes({ id }: AtividadeFiltro) {
-    return api.get(`/atividades/pendentes/${id}`);
+  async function filtroAtividade({ id, queryParams }: { id: number; queryParams?: Record<string, any> }) {
+    const queryString =
+      queryParams && Object.keys(queryParams).length > 0
+        ? "?" +
+          Object.entries(queryParams)
+            .map(([key, value]) => `${key}=${value}`)
+            .join("&")
+        : "";
+    return api.get(`/atividades/minhas-atividades/${id}${queryString}`);
   }
 
-  async function exibirAtividadesRejeitadas({ id }: AtividadeFiltro) {
-    return api.get(`/atividades/rejeitadas/${id}`);
-  }
-
-  async function exibirAtividadesConfirmadas({ id }: AtividadeFiltro) {
-    return api.get(`/atividades/confirmadas/${id}`);
-  }
-
-  async function exibirAtividadesFinalizadas({ id }: AtividadeFiltro) {
-    return api.get(`/atividades/finalizadas/${id}`);
-  }
 
   return {
     salvarAtividade,
-    exibirAtividadePorId,
     deletarAtividadePorId,
     atualizarAtividadePorId,
     MinhasAtividades,
-    exibirAtividadesPendentes,
-    exibirAtividadesRejeitadas,
-    exibirAtividadesConfirmadas,
-    exibirAtividadesFinalizadas,
+    filtroAtividade
   };
 }
 

@@ -8,7 +8,6 @@ import { MdKeyboardBackspace } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
-import ContainerItem from "../../components/container";
 import useUsuarioService from "../../service/UsuarioService";
 import { habilidadeVoluntarioMock } from "../../utils/mocks/Cadastro/HabilidadesMock";
 import { necessidadesIdosoMock } from "../../utils/mocks/Cadastro/Necessidades";
@@ -59,6 +58,7 @@ const CadastroUsuario: React.FC = () => {
       tipo: z.string().optional(),
       necessidade: z.any(),
       habilidade: z.string().optional(),
+      foto: z.string(),
     })
     .superRefine((data, ctx) => {
       if (tipo === "VOLUNTARIO") {
@@ -87,7 +87,6 @@ const CadastroUsuario: React.FC = () => {
         }
       }
     });
-
   const {
     register,
     handleSubmit,
@@ -104,9 +103,10 @@ const CadastroUsuario: React.FC = () => {
       estado: "",
       profissao: "",
       cpf: "",
-      tipo:"tipo",
+      tipo:"",
       necessidade:"",
       habilidade: "",
+      foto:""
     },
   });
   const mutation = useMutation({
@@ -126,7 +126,6 @@ const CadastroUsuario: React.FC = () => {
       errorValidator("Selecione o tipo de cadastro.");
       return;
     }
-    const necessidadeToString =  data.necessidade.join(',')
     const payload = {
       nome: data.nome,
       email: data.email,
@@ -136,9 +135,10 @@ const CadastroUsuario: React.FC = () => {
       estado: data.estado,
       profissao: data.profissao,
       cpf: data.cpf,
-      tipo: "tipo",
-      necessidade:necessidadeToString,
+      tipo: tipo,
+      necessidade:data.necessidade,
       habilidade: data.habilidade,
+      foto: data.foto,
     };
     console.log(payload);
 
@@ -175,7 +175,7 @@ const CadastroUsuario: React.FC = () => {
         pauseOnHover
         theme="light"
       />
-      <ContainerItem>
+      <>
         <div className="bg-white rounded-lg w-full h-full contents md:flex sm:contents justify-center md:grid md:grid-cols-2  sm:flex sm:justify-center">
           <div className="w-full h-full flex justify-center">
             {!tipo && (
@@ -316,7 +316,7 @@ const CadastroUsuario: React.FC = () => {
                           Data de Nascimento:
                         </label>
                         <input
-                          type="data"
+                          type="date"
                           placeholder="Insira sua data de Nascimento"
                           {...register("dataNascimento")}
                           id="dataNascimento"
@@ -470,7 +470,7 @@ const CadastroUsuario: React.FC = () => {
                     <div>
                       <label
                         className={`${
-                          errors.nome
+                          errors.email
                             ? "border-red-500 text-red-500"
                             : "border-gray-300"
                         }`}
@@ -490,6 +490,27 @@ const CadastroUsuario: React.FC = () => {
                       {errors?.email && (
                         <p className={erroStyle}> {errors.email.message}</p>
                       )}
+                    </div>
+                    <div>
+                      <label
+                        className={`${
+                          errors.foto
+                            ? "border-red-500 text-red-500"
+                            : "border-gray-300"
+                        }`}
+                        htmlFor="Foto"
+                      >
+                        Foto:
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="insira um link de sua foto em JPG ou PNG"
+                        {...register("foto")}
+                        id="foto"
+                        className={`${
+                          errors.foto ? "input-error" : "border-gray-300"
+                        } border-2 p-2 rounded w-full`}
+                      />
                     </div>
                     <div>
                       <label
@@ -540,7 +561,7 @@ const CadastroUsuario: React.FC = () => {
             ></div>
           </div>
         </div>
-      </ContainerItem>
+      </>
     </div>
   );
 };

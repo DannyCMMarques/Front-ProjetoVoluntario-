@@ -1,12 +1,13 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
-import Layout from "./components/layout";
+import Layout from "./components/layout/layout.tsx";
 import Atividades from "./pages/Atividades";
 import CadastroUsuario from "./pages/CadastroUsuarios";
 import Dashboard from "./pages/Dashboard";
-import ListaUsuarios from "./pages/ListaUsuarios";
+import { default as ListarUsuariosPage, default as ListaUsuarios } from "./pages/ListaUsuarios";
 import Login from "./pages/Login";
 import Usuarios from "./pages/Usuarios";
+import { UserProvider } from "./utils/context/useContext/useUserContext.tsx";
 
 function App() {
   const location = useLocation();
@@ -21,7 +22,7 @@ function App() {
             <Route path="/home" element={<Dashboard />} />
             <Route path="/meu-perfil" element={<Usuarios />} />
             <Route path="/idoso" element={<ListaUsuarios />} />
-            <Route path="/voluntarios" element={<ListaUsuarios />} />
+            <Route path="/voluntario" element={<ListarUsuariosPage />} />
             <Route path="/agenda" element={<Atividades />} />
           </Routes>
         </Layout>
@@ -37,8 +38,10 @@ function App() {
 
 export default function AppWrapper() {
   return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <UserProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </UserProvider>
   );
 }
