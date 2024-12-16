@@ -1,4 +1,3 @@
-import { UsuarioId } from "../utils/interfaces/ServiceProps";
 import useApiInterceptor from "./intercerptor";
 
 function UsuarioService() {
@@ -13,14 +12,14 @@ function UsuarioService() {
     return api.get(`${urlBase}`, { params: { tipo } });
   }
 
-  async function exibirUsuarioPorId({ id }: UsuarioId) {
+  async function exibirUsuarioPorId(id: number) {
     return api.get(`${urlBase}/${id}`);
   }
 
   async function exibirUsuarioConectado() {
     return api.get(`${urlBase}/listaUsuario`);
   }
-  async function excluirUsuariosPorId({ id }: UsuarioId) {
+  async function excluirUsuariosPorId(id:number) {
     return api.delete(`${urlBase}/${id}`);
   }
 

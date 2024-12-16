@@ -1,10 +1,19 @@
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
 import Layout from "./components/layout/layout.tsx";
 import Atividades from "./pages/Atividades";
 import CadastroUsuario from "./pages/CadastroUsuarios";
 import Dashboard from "./pages/Dashboard";
-import { default as ListarUsuariosPage, default as ListaUsuarios } from "./pages/ListaUsuarios";
+import {
+  default as ListarUsuariosPage,
+  default as ListaUsuarios,
+} from "./pages/ListaUsuarios";
 import Login from "./pages/Login";
 import Usuarios from "./pages/Usuarios";
 import { UserProvider } from "./utils/context/useContext/useUserContext.tsx";
@@ -48,7 +57,7 @@ function App() {
               }
             />
             <Route
-              path="/meu-perfil"
+              path="/usuario/*"
               element={
                 <ProtectedRoute>
                   <Usuarios />

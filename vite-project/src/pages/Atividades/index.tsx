@@ -7,6 +7,8 @@ import AtividadeService from "../../service/atividadeService";
 import { AuthContext } from "../../utils/context/useContext/useUserContext";
 
 const Atividades = () => {
+
+  
   const [atividades, setAtividades] = useState([]);
   const { userData } = useContext(AuthContext);
   const [filtro, setFiltro] = useState("Todas");
