@@ -1,7 +1,9 @@
 import AtividadeService from "../../service/atividadeService";
 
-const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh }) => {
+const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario }) => {
   const { atualizarAtividadePorId } = AtividadeService();
+
+
 
   const editarAtividade = async (payload) => {
     try {

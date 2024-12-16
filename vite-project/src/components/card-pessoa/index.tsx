@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 
 const CardPessoaComponent = ({
   name,
@@ -11,6 +12,7 @@ const CardPessoaComponent = ({
   sexo = "feminino",
   idoso = true,
   podeAgendar,
+  idUsuario,
 }) => {
   const obterCorDeFundo = () => {
     if (!sexo || idoso === null) return "bg-[#BCBCBC]";
@@ -19,6 +21,16 @@ const CardPessoaComponent = ({
       if (sexo === "feminino") return "bg-[#9381FF]";
     }
     return "bg-[#00ff73]";
+  };
+  const navigate = useNavigate();
+
+
+  const handleNavigate = (idUsuario: number | undefined) => {
+    if (!idUsuario) return;
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("id", idUsuario.toString());
+    navigate(`/usuario?${searchParams.toString()}`);
+    console.log("ID passado:", idUsuario);
   };
 
   return (
@@ -38,7 +50,7 @@ const CardPessoaComponent = ({
           )}
 
           <button
-            onClick={abrirModalUsuario}
+            onClick={() => handleNavigate(idUsuario)}
             className="flex items-center justify-center  py-2  text-white text-sm rounded-full hover:opacity-75"
             title="Visualizar perfil"
           >
@@ -60,7 +72,6 @@ const CardPessoaComponent = ({
 
         <div className="flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
             <div>
               <p className="font-bold text-sm">Nome</p>
               <p className="text-xs">{name || "Não informado"}</p>

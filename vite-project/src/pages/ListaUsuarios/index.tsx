@@ -47,7 +47,7 @@ const ListarUsuariosPage = () => {
   const fecharModal = () => {
     setIsModalOpen(false);
   };
-
+  const titulo = tipo === "voluntario" ?   "Conheça os nossos voluntários " : "Conheça nossos idosos"
   return (
     <div>
       <Modal isOpen={isModalOpen} onClose={fecharModal} size="small">
@@ -58,7 +58,7 @@ const ListarUsuariosPage = () => {
       </Modal>
       <ContainerBaseComponent>
         <div>
-          <p className="font-bold text-2xl">Lista de Voluntários</p>
+          <p className="font-bold text-2xl">{titulo}</p>
           <div className="flex gap-3 flex-wrap mt-4">
             {voluntarios.map((item) => (
               <CardPessoaComponent
@@ -74,6 +74,7 @@ const ListarUsuariosPage = () => {
                 necessidades={[]}
                 podeAgendar={podeAgendar}
                 profile={item.foto}
+                idUsuario={item.idUsuario}
               />
             ))}
           </div>

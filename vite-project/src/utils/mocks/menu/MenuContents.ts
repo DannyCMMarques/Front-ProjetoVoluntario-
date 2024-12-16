@@ -12,7 +12,7 @@ const MenuContents = (icons) => {
       label: "Usuários",
       submenus: [
         {
-          id: "meu-perfil",
+          id: "usuario",
           label: "Meu Perfil",
         },
         {
