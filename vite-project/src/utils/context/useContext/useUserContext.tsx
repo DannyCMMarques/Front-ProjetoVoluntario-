@@ -42,8 +42,14 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const refreshUserData = () => {
+    if (authToken && isTokenValid(authToken)) {
+      fetchUserData();
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setAuthToken, userData }}>
+    <AuthContext.Provider value={{ isAuthenticated, setAuthToken, userData, refreshUserData }}>
       {children}
     </AuthContext.Provider>
   );

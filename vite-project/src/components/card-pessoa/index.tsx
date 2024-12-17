@@ -20,7 +20,7 @@ const CardPessoaComponent = ({
       if (sexo === "masculino") return "bg-[#3463FF]";
       if (sexo === "feminino") return "bg-[#9381FF]";
     }
-    return "bg-[#00ff73]";
+    return "bg-[#02c3df]";
   };
   const navigate = useNavigate();
 
@@ -30,11 +30,10 @@ const CardPessoaComponent = ({
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set("id", idUsuario.toString());
     navigate(`/usuario?${searchParams.toString()}`);
-    console.log("ID passado:", idUsuario);
   };
 
   return (
-    <div className="w-full max-w-[487px] rounded-md shadow-md mx-auto bg-white overflow-hidden">
+    <div className="w-full max-w-[380px] rounded-md shadow-md mx-auto bg-white overflow-hidden">
       <div className={`w-full rounded-t-md h-10 ${obterCorDeFundo()}`}>
         <div className="flex  justify-end  items-center px-4 gap-3">
           {podeAgendar && (

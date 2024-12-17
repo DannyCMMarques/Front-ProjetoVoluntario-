@@ -33,3 +33,14 @@ export  interface ModalProps {
     tipoEncontro: "ONLINE" | "PRESENCIAL";
     endereco?: string;
   }
+
+ export interface FormData {
+    nomeAtividade: string;
+    descricaoAtividade: string;
+    dataEncontro: string;
+    horario: string;
+    tipoEncontro: "ONLINE" | "PRESENCIAL";
+    endereco?: string;
+    usuario: any;
+    usuarioSelecionado: any;
+  }
