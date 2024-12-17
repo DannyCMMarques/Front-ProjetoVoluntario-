@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import AtividadeExibida from "../../components/atividadeExibida";
 import CardAtividadeComponent from "../../components/card-atividade";
 import ContainerItem from "../../components/container";
 import FormComponent from "../../components/formulario-atividade";
@@ -8,19 +9,20 @@ import AtividadeService from "../../service/atividadeService";
 import { AuthContext } from "../../utils/context/useContext/useUserContext";
 
 const Atividades = () => {
-
-
   const [atividades, setAtividades] = useState([]);
   const { userData } = useContext(AuthContext);
   const [filtro, setFiltro] = useState("Todas");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const atividadeService = AtividadeService();
-  const [confirma, setConfirma] = useState(false)
-  const [titulo, setTitulo] = useState("")
-  const [idAtividade, setIdAtividade] = useState(null)
-  const [isModalFormularioOpen,setIsModaFormulariolOpen] = useState(false)
-  const [atividade,setAtividade] = useState({})
-const [editar, setEditar] = useState(false)
+  const [confirma, setConfirma] = useState(false);
+  const [titulo, setTitulo] = useState("");
+  const [idAtividade, setIdAtividade] = useState(null);
+  const [isModalFormularioOpen, setIsModaFormulariolOpen] = useState(false);
+  const [atividade, setAtividade] = useState({});
+  const [editar, setEditar] = useState(false);
+  const [excluir, setExcluir] = useState(false);
+  const [isModalExibirOpen, setIsModalExibirOpen] = useState(false);
+
   const handleGetAtividades = async (id: number, filtro: string) => {
     try {
       let queryParams = {};
@@ -41,13 +43,15 @@ const [editar, setEditar] = useState(false)
           queryParams = {};
       }
 
-      const response = await atividadeService.filtroAtividade({ id, queryParams });
+      const response = await atividadeService.filtroAtividade({
+        id,
+        queryParams,
+      });
       setAtividades(response.data);
     } catch (error) {
       console.error("Erro ao obter atividades:", error);
     }
   };
-
 
   useEffect(() => {
     if (userData?.idUsuario) {
@@ -68,42 +72,70 @@ const [editar, setEditar] = useState(false)
     setIsModalOpen(false);
   };
 
-  const abrirModal = (confirma, titulo, idAtividade) => {
-    setConfirma(confirma)
-    setTitulo(titulo)
-    setIdAtividade(idAtividade)
+  const abrirModal = (confirma, titulo, idAtividade, excluir) => {
+    setConfirma(confirma);
+    setTitulo(titulo);
+    setIdAtividade(idAtividade);
     setIsModalOpen(true);
+    setExcluir(excluir);
   };
-
   const refreshAtividades = () => {
-    handleGetAtividades(userData.idUsuario, "Todas")
-    fecharModal()
-  }
-  const fecharModalFormulario = ( ) =>{
-    refreshAtividades()
-    setIsModaFormulariolOpen(false)
-  }
+    handleGetAtividades(userData.idUsuario, "Todas");
+    fecharModal();
+  };
+  const fecharModalFormulario = () => {
+    refreshAtividades();
+    setIsModaFormulariolOpen(false);
+  };
   const abrirModalFormulario = (atividade) => {
-    setIdAtividade(atividade.id_atividade)
+    setIdAtividade(atividade.id_atividade);
     setIsModaFormulariolOpen(true);
     setAtividade(atividade);
     setEditar(true);
   };
+  const abrirModalExibir = (atividade) => {
+    setAtividade(atividade);
+    setIsModalExibirOpen(true);
+  };
+  const fecharModalExibir = () => {
+    setIsModalExibirOpen(false);
+  };
   return (
     <div>
-
       <Modal isOpen={isModalOpen} onClose={fecharModal} size="small">
-          <ModalConfirmaRejeita confirma={confirma} titulo={titulo} atividade={idAtividade} refresh={() => refreshAtividades()}/>
+        <ModalConfirmaRejeita
+          excluir={excluir}
+          confirma={confirma}
+          titulo={titulo}
+          atividade={idAtividade}
+          refresh={() => refreshAtividades()}
+        />
       </Modal>
-      <Modal isOpen={isModalFormularioOpen} onClose={fecharModalFormulario} size="small">
-          <FormComponent onClose={fecharModalFormulario} atividade={atividade} idAtividade={idAtividade} editar={editar} refresh={() => refreshAtividades() }/>
+      <Modal
+        isOpen={isModalFormularioOpen}
+        onClose={fecharModalFormulario}
+        size="small"
+      >
+        <FormComponent
+          onClose={fecharModalFormulario}
+          atividade={atividade}
+          idAtividade={idAtividade}
+          editar={editar}
+          refresh={() => refreshAtividades()}
+        />
+      </Modal>
+      <Modal
+        isOpen={isModalExibirOpen}
+        onClose={fecharModalExibir}
+        size="medium"
+      >
+        <AtividadeExibida atividade={atividade} />
       </Modal>
       <ContainerItem>
         <div className="flex gap-3 items-center">
           <p className="font-bold text-2xl w-max">Atividades</p>
           <div className="w-full h-[0.5px] bg-slate-400"></div>
         </div>
-
 
         <div className="mt-3">
           <div className="flex gap-3 border-b">
@@ -123,44 +155,52 @@ const [editar, setEditar] = useState(false)
           </div>
         </div>
 
-
         <div className="flex gap-3 flex-wrap mt-4">
           {atividades.length === 0 ? (
             <>
-            <div className="bg-gray-100 text-center p-6 w-full">
-              <p>Nenhuma atividade disponivel</p>
-            </div>
+              <div className="bg-gray-100 text-center p-6 w-full">
+                <p>Nenhuma atividade disponivel</p>
+              </div>
             </>
           ) : (
             <>
-            {atividades.map((atividade) => (
-              <CardAtividadeComponent key={atividade.id_atividade} {...atividade}
-              status={
-                atividade.finalizada
-                  ? "Concluída"
-                  : atividade.rejeitada
-                  ? "Rejeitada"
-                  : atividade.confirmada
-                  ? "Aceita"
-                  : "Pendente"
-              }
-              titulo={atividade.nomeAtividade}
-               descricao={atividade.descricaoAtividade}
-               criador={atividade.usuarioCriador}
-               convidado={atividade.usuarioConvidado}
-               criadaEm={atividade.dataCadastro}
-               dataEncontro={atividade.dataEncontro}
-               horarioo={atividade.horario}
-               local={atividade.endereco}
-               idUsuario={userData?.idUsuario}
-               confirma={() => abrirModal(true, atividade.nomeAtividade, atividade)}
-               rejeita={() => abrirModal(false, atividade.nomeAtividade, atividade)}
-               editar={()=> abrirModalFormulario(atividade,)}
-              />
-            ))}
+              {atividades.map((atividade) => (
+                <CardAtividadeComponent
+                  key={atividade.id_atividade}
+                  {...atividade}
+                  status={
+                    atividade.finalizada
+                      ? "Concluída"
+                      : atividade.rejeitada
+                      ? "Rejeitada"
+                      : atividade.confirmada
+                      ? "Aceita"
+                      : "Pendente"
+                  }
+                  titulo={atividade.nomeAtividade}
+                  descricao={atividade.descricaoAtividade}
+                  criador={atividade.usuarioCriador}
+                  convidado={atividade.usuarioConvidado}
+                  criadaEm={atividade.dataCadastro}
+                  dataEncontro={atividade.dataEncontro}
+                  horarioo={atividade.horario}
+                  local={atividade.endereco}
+                  idUsuario={userData?.idUsuario}
+                  confirma={() =>
+                    abrirModal(true, atividade.nomeAtividade, atividade, false)
+                  }
+                  rejeita={() =>
+                    abrirModal(false, atividade.nomeAtividade, atividade, false)
+                  }
+                  editar={() => abrirModalFormulario(atividade)}
+                  deletar={() =>
+                    abrirModal(false, atividade.nomeAtividade, atividade, true)
+                  }
+                  visualizar={() => abrirModalExibir(atividade)}
+                />
+              ))}
             </>
           )}
-
         </div>
       </ContainerItem>
     </div>
