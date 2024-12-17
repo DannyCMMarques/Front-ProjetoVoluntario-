@@ -5,6 +5,7 @@ import ContainerBaseComponent from "../../components/container";
 import FormComponent from "../../components/formulario-atividade";
 import LoadingComponent from "../../components/loading";
 import Modal from "../../components/modal";
+import Paginacao from "../../components/paginacao";
 import UsuarioService from "../../service/UsuarioService";
 import { AuthContext } from "../../utils/context/useContext/useUserContext";
 
@@ -16,6 +17,11 @@ const ListarUsuariosPage = () => {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [infoPaginacao, setInfoPaginacao] = useState({
+    currentPage: 1,
+    totalItems: 0,
+    itemsPerPage: 10,
+  });
   const location = useLocation();
 
   const getTipoFromUrl = () => {
@@ -24,13 +30,20 @@ const ListarUsuariosPage = () => {
     return parts[1] || "";
   };
 
-  const getVoluntarios = async () => {
+  const getVoluntarios = async (page = 0) => {
     const tipoUser = getTipoFromUrl();
     setTipo(tipoUser);
     try {
-      const response = await filtrarUsuariosTipo(tipoUser.toUpperCase());
-      setVoluntarios(response.data.content);
-      setIsLoading(false);
+
+      const response = await filtrarUsuariosTipo(tipoUser.toUpperCase(), page, 10);
+           setVoluntarios(response.data.content);
+           setInfoPaginacao({
+             currentPage: response.data.pageable.pageNumber + 1,
+             totalItems: response.data.totalElements,
+             itemsPerPage: response.data.pageable.pageSize,
+           });
+              setIsLoading(false);
+
     } catch (error) {
       console.error("Erro ao buscar voluntários:", error);
     }
@@ -51,13 +64,17 @@ const ListarUsuariosPage = () => {
     setIsModalOpen(false);
   };
   const titulo =
-    tipo === "voluntario"
-      ?  <p className="font-bold text-2xl items-center flex gap-3">Conheça os nossos voluntários <span class="material-symbols-outlined">
-      diversity_1
-      </span>  </p>
-      : <p className="font-bold text-2xl items-center flex gap-3">Conheça os nossos idosos <span class="material-symbols-outlined">
-      elderly
-      </span> </p>
+    tipo === "voluntario" ? (
+      <p className="font-bold text-2xl items-center flex gap-3">
+        Conheça os nossos voluntários{" "}
+        <span class="material-symbols-outlined">diversity_1</span>{" "}
+      </p>
+    ) : (
+      <p className="font-bold text-2xl items-center flex gap-3">
+        Conheça os nossos idosos{" "}
+        <span class="material-symbols-outlined">elderly</span>{" "}
+      </p>
+    );
   return (
     <div>
       {isLoading ? (
@@ -92,11 +109,16 @@ const ListarUsuariosPage = () => {
                     podeAgendar={podeAgendar}
                     profile={item.foto}
                     idUsuario={item.idUsuario}
-
                   />
                 ))}
               </div>
             </div>
+            <Paginacao
+  currentPage={infoPaginacao.currentPage}
+  totalItems={infoPaginacao.totalItems}
+  itemsPerPage={infoPaginacao.itemsPerPage}
+  onPageChange={(page) => getVoluntarios(page - 1)}
+/>
           </ContainerBaseComponent>
         </div>
       )}
