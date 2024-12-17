@@ -1,8 +1,5 @@
 import useApiInterceptor from './intercerptor';
 
-interface AtividadeId {
-  id: number;
-}
 
 interface AtividadeFiltro {
   id: number;
@@ -15,11 +12,11 @@ function AtividadeService() {
     return api.post("/atividades", payload);
   }
 
-  // async function exibirAtividadePorId({ id }: AtividadeId) {
-  //   return api.get(`/atividades/${id}`);
-  // }
+  async function exibirAtividadePorId( id:number ) {
+    return api.get(`/atividades/${id}`);
+  }
 
-  async function deletarAtividadePorId({ id }: AtividadeId) {
+  async function deletarAtividadePorId(id:number) {
     return api.delete(`/atividades/${id}`);
   }
 
@@ -27,7 +24,7 @@ function AtividadeService() {
     return api.put(`/atividades/${id}`, payload);
   }
 
-  async function MinhasAtividades({ id }: AtividadeFiltro) {
+  async function MinhasAtividades(id:number) {
     return api.get(`/atividades/minhas-atividades/${id}`);
   }
 
@@ -48,7 +45,8 @@ function AtividadeService() {
     deletarAtividadePorId,
     atualizarAtividadePorId,
     MinhasAtividades,
-    filtroAtividade
+    filtroAtividade,
+    exibirAtividadePorId
   };
 }
 

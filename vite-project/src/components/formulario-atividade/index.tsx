@@ -1,22 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
 import AtividadeService from "../../service/atividadeService";
-
-interface FormData {
-  nomeAtividade: string;
-  descricaoAtividade: string;
-  dataEncontro: string;
-  horario: string;
-  tipoEncontro: "ONLINE" | "PRESENCIAL";
-  endereco?: string;
-  usuario: any;
-  usuarioSelecionado: any;
-}
+import FormData from "../../utils/interfaces/ComponenteProps";
 
 const errorValidator = (data: string) =>
   toast(`${data}`, {
@@ -42,10 +32,22 @@ const successValidation = (data: string) =>
     theme: "light",
   });
 
-const FormComponent: React.FC = ({podeAgendar, usuario, usuarioSelecionado, idAtividade}) => {
-  const { salvarAtividade, atualizarAtividadePorId, deletarAtividadePorId } =
-    AtividadeService();
-
+const FormComponent: React.FC = ({
+  podeAgendar,
+  usuario,
+  usuarioSelecionado,
+  idAtividade,
+  editar,
+  atividade,
+  onClose,
+  cadastrar,
+}) => {
+  const {
+    salvarAtividade,
+    atualizarAtividadePorId,
+    deletarAtividadePorId,
+    exibirAtividadePorId,
+  } = AtividadeService();
   const [confirmada, setConfirmada] = useState(false);
   const [rejeitada, setRejeitada] = useState(false);
   const [finalizada, setFinalizada] = useState(false);
@@ -67,6 +69,18 @@ const FormComponent: React.FC = ({podeAgendar, usuario, usuarioSelecionado, idAt
     endereco: z.string().optional(),
   });
 
+  const mutationPost = useMutation({
+    mutationFn: salvarAtividade,
+    onSuccess: () => {
+      reset();
+      successValidation("Atividade criada com sucesso!");
+      fecharModal();
+    },
+    onError: () => {
+      errorValidator("Erro ao criar atividade!");
+    },
+  });
+
   const {
     register,
     handleSubmit,
@@ -75,56 +89,69 @@ const FormComponent: React.FC = ({podeAgendar, usuario, usuarioSelecionado, idAt
   } = useForm<FormData>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
-      nomeAtividade: "",
-      descricaoAtividade: "",
-      dataEncontro: "",
-      horario: "",
-      tipoEncontro: "ONLINE",
-      endereco: "",
+      nomeAtividade: atividade?.nomeAtividade,
+      descricaoAtividade: atividade?.descricaoAtividade,
+      dataEncontro: atividade?.dataEncontro,
+      horario: atividade?.horario,
+      tipoEncontro: atividade?.tipoEncontro,
+      endereco: atividade?.endereço,
     },
   });
 
-  const mutationPost = useMutation({
-    mutationFn: salvarAtividade,
-    onSuccess: () => {
-      reset();
-      successValidation("Atividade criada com sucesso!");
-    },
-    onError: () => {
-      errorValidator("Erro ao criar atividade!");
-    },
-  });
-
-  const editar = useMutation({
-    mutationFn: salvarAtividade,
-    onSuccess: () => {
-      reset();
-      successValidation("Atividade criada com sucesso!");
-    },
-    onError: () => {
-      errorValidator("Erro ao criar atividade!");
-    },
-  });
+  const editarAtividade = async (payload) => {
+    try {
+      await atualizarAtividadePorId(idAtividade, payload);
+      fecharModal();
+    } catch (error) {
+      console.error("Erro ao buscar usuário:", error);
+    }
+  };
 
   const handlePost = (data: FormData) => {
-
-    const payload = { ...data, confirmada, rejeitada, finalizada, usuarioConvidado: {idUsuario: usuarioSelecionado.idUsuario}, usuarioCriador: {idUsuario:usuario.idUsuario} };
-    if (idAtividade) {
-      editar.mutate(payload);
-    } else {
+    if (!idAtividade) {
+      const payload = {
+        ...data,
+        confirmada,
+        rejeitada,
+        finalizada,
+        usuarioConvidado: { idUsuario: usuarioSelecionado.idUsuario },
+        usuarioCriador: { idUsuario: usuario.idUsuario },
+      };
       mutationPost.mutate(payload);
+    }
+
+    if (atividade) {
+      const payloadEditada = {
+        ...data,
+        id_atividade: atividade?.id_atividade,
+        confirmada: atividade?.confirmada,
+        rejeitada: atividade?.rejeitada,
+        finalizada: atividade?.finalizada,
+        usuarioConvidado: { idUsuario: atividade?.usuarioConvidado.idUsuario },
+        usuarioCriador: { idUsuario: atividade?.usuarioCriador.idUsuario },
+      };
+      editarAtividade(payloadEditada);
     }
   };
 
   const erroStyle = "text-red-600 text-left text-[12px]";
 
-  function handleConfirmar(): void {
-    setConfirmada(true);
-  }
-  function handleRejeitada(): void {
-    setRejeitada(true);
+  function fecharModal(): void {
+    onClose();
   }
 
+  useEffect(() => {
+    if (atividade) {
+      reset({
+        nomeAtividade: atividade.nomeAtividade || "",
+        descricaoAtividade: atividade.descricaoAtividade || "",
+        dataEncontro: atividade.dataEncontro || "",
+        horario: atividade.horario || "",
+        tipoEncontro: atividade.tipoEncontro || "ONLINE",
+        endereco: atividade.endereco || "",
+      });
+    }
+  }, [atividade, reset]);
   return (
     <>
       <ToastContainer />
@@ -230,11 +257,11 @@ const FormComponent: React.FC = ({podeAgendar, usuario, usuarioSelecionado, idAt
             onClick={handleSubmit(handlePost)}
             className="p-3 w-full bg-green-400 text-white text-center rounded-md hover:opacity-70 cursor-pointer duration-100"
           >
-            {podeAgendar ? "Criar" : "Aceitar"}
+            {editar ? "Editar" : cadastrar ? "Criar" : ""}
           </p>
           <p
             className="p-3 bg-red-400 text-white w-full text-center rounded-md hover:opacity-70 cursor-pointer duration-100"
-            onClick={handleRejeitada}
+            onClick={fecharModal}
           >
             Cancelar
           </p>

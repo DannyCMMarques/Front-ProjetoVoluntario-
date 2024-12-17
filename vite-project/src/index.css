@@ -7,6 +7,12 @@
   height: 100%;
 }
 
+
+
+html{
+  background-color: #e1f2fd;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
 }

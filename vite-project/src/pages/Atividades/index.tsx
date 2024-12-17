@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import CardAtividadeComponent from "../../components/card-atividade";
 import ContainerItem from "../../components/container";
+import FormComponent from "../../components/formulario-atividade";
 import Modal from "../../components/modal";
 import ModalConfirmaRejeita from "../../components/modal-confirm-reject";
 import AtividadeService from "../../service/atividadeService";
@@ -8,7 +9,7 @@ import { AuthContext } from "../../utils/context/useContext/useUserContext";
 
 const Atividades = () => {
 
-  
+
   const [atividades, setAtividades] = useState([]);
   const { userData } = useContext(AuthContext);
   const [filtro, setFiltro] = useState("Todas");
@@ -17,7 +18,9 @@ const Atividades = () => {
   const [confirma, setConfirma] = useState(false)
   const [titulo, setTitulo] = useState("")
   const [idAtividade, setIdAtividade] = useState(null)
-
+  const [isModalFormularioOpen,setIsModaFormulariolOpen] = useState(false)
+  const [atividade,setAtividade] = useState({})
+const [editar, setEditar] = useState(false)
   const handleGetAtividades = async (id: number, filtro: string) => {
     try {
       let queryParams = {};
@@ -76,11 +79,24 @@ const Atividades = () => {
     handleGetAtividades(userData.idUsuario, "Todas")
     fecharModal()
   }
-
+  const fecharModalFormulario = ( ) =>{
+    refreshAtividades()
+    setIsModaFormulariolOpen(false)
+  }
+  const abrirModalFormulario = (atividade) => {
+    setIdAtividade(atividade.id_atividade)
+    setIsModaFormulariolOpen(true);
+    setAtividade(atividade);
+    setEditar(true);
+  };
   return (
     <div>
+
       <Modal isOpen={isModalOpen} onClose={fecharModal} size="small">
           <ModalConfirmaRejeita confirma={confirma} titulo={titulo} atividade={idAtividade} refresh={() => refreshAtividades()}/>
+      </Modal>
+      <Modal isOpen={isModalFormularioOpen} onClose={fecharModalFormulario} size="small">
+          <FormComponent onClose={fecharModalFormulario} atividade={atividade} idAtividade={idAtividade} editar={editar} refresh={() => refreshAtividades() }/>
       </Modal>
       <ContainerItem>
         <div className="flex gap-3 items-center">
@@ -139,6 +155,7 @@ const Atividades = () => {
                idUsuario={userData?.idUsuario}
                confirma={() => abrirModal(true, atividade.nomeAtividade, atividade)}
                rejeita={() => abrirModal(false, atividade.nomeAtividade, atividade)}
+               editar={()=> abrirModalFormulario(atividade,)}
               />
             ))}
             </>

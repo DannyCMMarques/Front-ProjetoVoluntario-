@@ -10,7 +10,8 @@ const CardAtividadeComponent = ({
     local,
     idUsuario,
     confirma,
-    rejeita
+    rejeita,
+    editar
   }) => {
     const getStatusStyles = () => {
       switch (status) {
@@ -44,16 +45,13 @@ const CardAtividadeComponent = ({
     const { bgColor, textColor } = getStatusStyles();
 
     const visualizarMensagem = () => {
-      console.log(
-        "to do"
-      );
+      
+    
     };
 
     const editarMensagem = (event) => {
       event.stopPropagation();
-      console.log(
-        "to do"
-      );
+     editar()
     };
 
     const rejeitarMensagem = (event) => {
