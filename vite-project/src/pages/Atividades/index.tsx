@@ -5,6 +5,7 @@ import ContainerItem from "../../components/container";
 import FormComponent from "../../components/formulario-atividade";
 import Modal from "../../components/modal";
 import ModalConfirmaRejeita from "../../components/modal-confirm-reject";
+import Paginacao from "../../components/paginador";
 import AtividadeService from "../../service/atividadeService";
 import { AuthContext } from "../../utils/context/useContext/useUserContext";
 
@@ -22,8 +23,13 @@ const Atividades = () => {
   const [editar, setEditar] = useState(false);
   const [excluir, setExcluir] = useState(false);
   const [isModalExibirOpen, setIsModalExibirOpen] = useState(false);
+  const [infoPaginacao, setInfoPaginacao] = useState({
+    currentPage: 1,
+    totalItems: 0,
+    itemsPerPage: 10,
+  });
 
-  const handleGetAtividades = async (id: number, filtro: string) => {
+  const handleGetAtividades = async (id: number, filtro: string, page = 0, size = 10) => {
     try {
       let queryParams = {};
       switch (filtro) {
@@ -46,8 +52,16 @@ const Atividades = () => {
       const response = await atividadeService.filtroAtividade({
         id,
         queryParams,
+        page,
+        size,
       });
-      setAtividades(response.data);
+
+      setAtividades(response.data.content); // Atividades da página atual
+      setInfoPaginacao({
+        currentPage: response.data.pageable.pageNumber + 1, // Zero-based para one-based
+        totalItems: response.data.totalElements,
+        itemsPerPage: response.data.pageable.pageSize,
+      });
     } catch (error) {
       console.error("Erro ao obter atividades:", error);
     }
@@ -202,6 +216,12 @@ const Atividades = () => {
             </>
           )}
         </div>
+        <Paginacao
+  currentPage={infoPaginacao.currentPage} // Página atual
+  totalItems={infoPaginacao.totalItems}   // Total de registros
+  itemsPerPage={infoPaginacao.itemsPerPage} // Tamanho da página
+  onPageChange={(page) => handleGetAtividades(userData.idUsuario, filtro, page - 1)} // Subtrai 1 para alinhar com zero-based
+/>
       </ContainerItem>
     </div>
   );

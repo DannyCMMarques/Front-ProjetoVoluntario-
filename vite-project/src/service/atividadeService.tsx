@@ -28,17 +28,25 @@ function AtividadeService() {
     return api.get(`/atividades/minhas-atividades/${id}`);
   }
 
-  async function filtroAtividade({ id, queryParams }: { id: number; queryParams?: Record<string, any> }) {
+  async function filtroAtividade({
+    id,
+    queryParams = {},
+    page = 0,
+    size = 10,
+  }: {
+    id: number;
+    queryParams?: Record<string, any>;
+    page?: number;
+    size?: number;
+  }) {
+    const baseParams = { page, size, ...queryParams };
     const queryString =
-      queryParams && Object.keys(queryParams).length > 0
-        ? "?" +
-          Object.entries(queryParams)
-            .map(([key, value]) => `${key}=${value}`)
-            .join("&")
-        : "";
+      "?" +
+      Object.entries(baseParams)
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
     return api.get(`/atividades/minhas-atividades/${id}${queryString}`);
   }
-
 
   return {
     salvarAtividade,

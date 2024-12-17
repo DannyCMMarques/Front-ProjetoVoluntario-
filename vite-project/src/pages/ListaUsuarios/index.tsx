@@ -5,6 +5,7 @@ import ContainerBaseComponent from "../../components/container";
 import FormComponent from "../../components/formulario-atividade";
 import LoadingComponent from "../../components/loading";
 import Modal from "../../components/modal";
+import Paginacao from "../../components/paginador";
 import UsuarioService from "../../service/UsuarioService";
 import { AuthContext } from "../../utils/context/useContext/useUserContext";
 
@@ -16,7 +17,11 @@ const ListarUsuariosPage = () => {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation();
+  const [infoPaginacao, setInfoPaginacao] = useState({
+    currentPage: 1,
+    totalItems: 0,
+    itemsPerPage: 10,
+  });  const location = useLocation();
 
   const getTipoFromUrl = () => {
     const path = location.pathname;
@@ -24,12 +29,19 @@ const ListarUsuariosPage = () => {
     return parts[1] || "";
   };
 
-  const getVoluntarios = async () => {
+  const getVoluntarios = async (page = 0) => {
     const tipoUser = getTipoFromUrl();
     setTipo(tipoUser);
+
     try {
-      const response = await filtrarUsuariosTipo(tipoUser.toUpperCase());
-      setVoluntarios(response.data.content);
+      const response = await filtrarUsuariosTipo(tipoUser.toUpperCase(), page, 10); // Chama com paginação
+ console.log(22222,response);
+      setVoluntarios(response.data.content); // Define os dados dos voluntários
+      setInfoPaginacao({
+        currentPage: response.data.pageable.pageNumber + 1, // Converte zero-based para one-based
+        totalItems: response.data.totalElements,
+        itemsPerPage: response.data.pageable.pageSize,
+      });
       setIsLoading(false);
     } catch (error) {
       console.error("Erro ao buscar voluntários:", error);
@@ -58,6 +70,7 @@ const ListarUsuariosPage = () => {
       : <p className="font-bold text-2xl items-center flex gap-3">Conheça os nossos idosos <span class="material-symbols-outlined">
       elderly
       </span> </p>
+
   return (
     <div>
       {isLoading ? (
@@ -97,6 +110,12 @@ const ListarUsuariosPage = () => {
                 ))}
               </div>
             </div>
+            <Paginacao
+  currentPage={infoPaginacao.currentPage} // Página atual (one-based)
+  totalItems={infoPaginacao.totalItems}   // Total de elementos
+  itemsPerPage={infoPaginacao.itemsPerPage} // Itens por página
+  onPageChange={(page) => getVoluntarios(page - 1)} // Converte one-based para zero-based
+/>
           </ContainerBaseComponent>
         </div>
       )}

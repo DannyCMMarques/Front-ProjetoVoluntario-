@@ -22,6 +22,7 @@ const successValidation = (data: any) =>
 const Usuarios = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { userData, refreshUserData } = useContext(AuthContext);
+  console.log(388383,userData);
   const location = useLocation();
   const { exibirUsuarioPorId, excluirUsuariosPorId } = UsuarioService();
   const [isLoading, setIsLoading] = useState(true);

@@ -72,6 +72,7 @@ const Login = () => {
     },
     onError: (error) => {
       setIsLoading(false)
+      console.log("ih"+ error)
       errorValidator(error.message);
     },
   });

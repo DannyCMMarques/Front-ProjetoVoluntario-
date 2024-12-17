@@ -8,8 +8,10 @@ function UsuarioService() {
     return api.post(urlBase, payload);
   }
 
-  async function filtrarUsuariosTipo(tipo: string) {
-    return api.get(`${urlBase}`, { params: { tipo } });
+  async function filtrarUsuariosTipo(tipo: string, page: number = 0, size: number = 10) {
+    return api.get(`${urlBase}`, {
+      params: { tipo, page, size } // Adiciona paginação
+    });
   }
 
   async function exibirUsuarioPorId(id: number) {
@@ -26,6 +28,10 @@ function UsuarioService() {
   async function atualizarUsuarioPorId(id: number, payload: object) {
     return api.put(`${urlBase}/${id}`, payload);
   }
+
+  // async function listarUsuarioPorTipo() {
+  //   return api.get(`${urlBase}/listaUsuario`);
+  // }
 
   return {
     cadastrarUsuario,
