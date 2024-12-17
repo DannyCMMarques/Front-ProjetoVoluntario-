@@ -1,8 +1,7 @@
 import AtividadeService from "../../service/atividadeService";
 
-const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario }) => {
-  const { atualizarAtividadePorId } = AtividadeService();
-
+const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario,excluir }) => {
+  const { atualizarAtividadePorId,deletarAtividadePorId } = AtividadeService();
 
 
   const editarAtividade = async (payload) => {
@@ -11,6 +10,16 @@ const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario })
         payload.id_atividade,
         payload
       );
+      refresh()
+    } catch (error) {
+      console.error("Erro ao atualizar atividade:", error);
+    }
+  };
+
+  const deletarAtividade = async () => {
+    try {
+      const response = await deletarAtividadePorId(atividade.id_atividade );
+
       refresh()
     } catch (error) {
       console.error("Erro ao atualizar atividade:", error);
@@ -26,7 +35,10 @@ const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario })
 
     editarAtividade(payload);
   };
+  const handleDeletarAtividade = () => {
 
+    deletarAtividade();
+  };
   return (
     <div>
       <p
@@ -34,12 +46,15 @@ const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario })
           confirma ? "text-[#3a4dff]" : "text-red-500"
         } text-center items-center font-bold text-xl`}
       >
-        {confirma ? "Confirmar" : "Rejeitar"} Mensagem
+        {
+        excluir ? "Excluir" :
+        confirma ? "Confirmar" : "Rejeitar"} Atividade
       </p>
 
       <div className="mt-4 text-center">
         <p>
-          Deseja {confirma ? "Confirmar" : "Rejeitar"} a mensagem{" "}
+          Deseja {excluir? "Excluir" :
+          confirma ? "Confirmar" : "Rejeitar"} a atividade{" "}
           <strong>"{titulo}"</strong>
         </p>
       </div>
@@ -51,13 +66,13 @@ const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario })
           Cancelar
         </p>
         <p
-          onClick={() => handleEditAtividade(confirma)}
+          onClick={excluir ? () => handleDeletarAtividade() : () => handleEditAtividade(confirma)}
           className={`${
             confirma ? "bg-emerald-400 text-white" : "bg-red-400 text-white"
           } text-center items-center w-full p-3 rounded-md cursor-pointer hover:opacity-75 duration-150`}
         >
-          {" "}
-          {confirma ? "Confirmar" : "Rejeitar"}
+          {excluir ? "Excluir":
+          confirma ? "Confirmar" : "Rejeitar"}
         </p>
       </div>
     </div>
