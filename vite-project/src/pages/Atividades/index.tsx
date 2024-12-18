@@ -132,6 +132,7 @@ const Atividades = () => {
   const fecharModalExibir = () => {
     setIsModalExibirOpen(false);
   };
+
   return (
     <div>
       <Modal isOpen={isModalOpen} onClose={fecharModal} size="small">
@@ -164,84 +165,107 @@ const Atividades = () => {
         <AtividadeExibida atividade={atividade} />
       </Modal>
       <ContainerItem>
-        <div className="flex gap-3 items-center">
-          <p className="font-bold text-2xl w-max">Atividades</p>
-          <div className="w-full h-[0.5px] bg-slate-400"></div>
-        </div>
-
-        <div className="mt-3">
-          <div className="flex gap-3 border-b">
-            {filtros.map((nomeFiltro) => (
-              <p
-                key={nomeFiltro}
-                onClick={() => handleFiltroClick(nomeFiltro)}
-                className={`cursor-pointer pb-2 ${
-                  filtro === nomeFiltro
-                    ? "text-blue-500 font-bold border-b-2 border-blue-500"
-                    : "text-gray-500"
-                }`}
-              >
-                {nomeFiltro}
-              </p>
-            ))}
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-3 items-center">
+            <p className="font-bold text-2xl">Atividades</p>
+            <div className="w-full h-[0.5px] bg-slate-400"></div>
           </div>
-        </div>
 
-        <div className="flex gap-3 flex-wrap mt-4">
-          {atividades.length === 0 ? (
-            <>
-              <div className="bg-gray-100 text-center p-6 w-full">
-                <p>Nenhuma atividade disponivel</p>
-              </div>
-            </>
-          ) : (
-            <>
-              {atividades.map((atividade) => (
-                <CardAtividadeComponent
-                  key={atividade.id_atividade}
-                  {...atividade}
-                  status={
-                    atividade.finalizada
-                      ? "Concluída"
-                      : atividade.rejeitada
-                      ? "Rejeitada"
-                      : atividade.confirmada
-                      ? "Aceita"
-                      : "Pendente"
-                  }
-                  titulo={atividade.nomeAtividade}
-                  descricao={atividade.descricaoAtividade}
-                  criador={atividade.usuarioCriador}
-                  convidado={atividade.usuarioConvidado}
-                  criadaEm={atividade.dataCadastro}
-                  dataEncontro={atividade.dataEncontro}
-                  horarioo={atividade.horario}
-                  local={atividade.endereco}
-                  idUsuario={userData?.idUsuario}
-                  confirma={() =>
-                    abrirModal(true, atividade.nomeAtividade, atividade, false)
-                  }
-                  rejeita={() =>
-                    abrirModal(false, atividade.nomeAtividade, atividade, false)
-                  }
-                  editar={() => abrirModalFormulario(atividade)}
-                  deletar={() =>
-                    abrirModal(false, atividade.nomeAtividade, atividade, true)
-                  }
-                  visualizar={() => abrirModalExibir(atividade)}
-                />
+          <div className="mt-3">
+            <div className="flex flex-wrap gap-3 border-b">
+              {filtros.map((nomeFiltro) => (
+                <p
+                  key={nomeFiltro}
+                  onClick={() => handleFiltroClick(nomeFiltro)}
+                  className={`cursor-pointer pb-2 ${
+                    filtro === nomeFiltro
+                      ? "text-blue-500 font-bold border-b-2 border-blue-500"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {nomeFiltro}
+                </p>
               ))}
-            </>
+            </div>
+          </div>
+
+          {atividades.length === 0 && (
+              <div className="bg-gray-100 text-center p-6 w-full">
+                <p>Nenhuma atividade disponível</p>
+              </div>
+            )
+          }
+
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+
+              {atividades.map((atividade) => (
+                <div
+                  key={atividade.id_atividade}
+                  className="flex justify-center sm:justify-start"
+                >
+                  <CardAtividadeComponent
+                    {...atividade}
+                    status={
+                      atividade.finalizada
+                        ? "Concluída"
+                        : atividade.rejeitada
+                        ? "Rejeitada"
+                        : atividade.confirmada
+                        ? "Aceita"
+                        : "Pendente"
+                    }
+                    titulo={atividade.nomeAtividade}
+                    descricao={atividade.descricaoAtividade}
+                    criador={atividade.usuarioCriador}
+                    convidado={atividade.usuarioConvidado}
+                    criadaEm={atividade.dataCadastro}
+                    dataEncontro={atividade.dataEncontro}
+                    horarioo={atividade.horario}
+                    local={atividade.endereco}
+                    idUsuario={userData?.idUsuario}
+                    confirma={() =>
+                      abrirModal(
+                        true,
+                        atividade.nomeAtividade,
+                        atividade,
+                        false
+                      )
+                    }
+                    rejeita={() =>
+                      abrirModal(
+                        false,
+                        atividade.nomeAtividade,
+                        atividade,
+                        false
+                      )
+                    }
+                    editar={() => abrirModalFormulario(atividade)}
+                    deletar={() =>
+                      abrirModal(
+                        false,
+                        atividade.nomeAtividade,
+                        atividade,
+                        true
+                      )
+                    }
+                    visualizar={() => abrirModalExibir(atividade)}
+                  />
+                </div>
+              ))
+            }
+          </div>
+
+          {atividades.length !== 0 && (
+            <Paginacao
+              currentPage={infoPaginacao.currentPage}
+              totalItems={infoPaginacao.totalItems}
+              itemsPerPage={infoPaginacao.itemsPerPage}
+              onPageChange={(page) =>
+                handleGetAtividades(userData.idUsuario, filtro, page - 1)
+              }
+            />
           )}
         </div>
-        <Paginacao
-          currentPage={infoPaginacao.currentPage}
-          totalItems={infoPaginacao.totalItems}
-          itemsPerPage={infoPaginacao.itemsPerPage}
-          onPageChange={(page) =>
-            handleGetAtividades(userData.idUsuario, filtro, page - 1)
-          }
-        />
       </ContainerItem>
     </div>
   );

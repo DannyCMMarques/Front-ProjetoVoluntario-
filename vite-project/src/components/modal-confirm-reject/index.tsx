@@ -1,36 +1,16 @@
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AtividadeService from "../../service/atividadeService";
 
-const errorValidator = (data: string) =>
-  toast(`${data}`, {
-    position: "top-right",
-    autoClose: 1500,
-    type: "error",
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "light",
-  });
-
-const successValidation = (data: string) =>
-  toast(`${data}`, {
-    position: "top-right",
-    autoClose: 1500,
-    type: "success",
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "light",
-  });
-
-
-
-const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario,excluir }) => {
-  const { atualizarAtividadePorId,deletarAtividadePorId } = AtividadeService();
-
+const ModalConfirmaRejeita = ({
+  confirma,
+  titulo,
+  atividade,
+  refresh,
+  usuario,
+  excluir,
+}) => {
+  const { atualizarAtividadePorId, deletarAtividadePorId } = AtividadeService();
 
   const editarAtividade = async (payload) => {
     try {
@@ -38,20 +18,20 @@ const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario,ex
         payload.id_atividade,
         payload
       );
-      refresh()
-      successValidation("Atividade atualizada com sucesso!")
+      refresh();
+
     } catch (error) {
-      errorValidator(error?.response.data)
+     console.error(error)
     }
   };
 
   const deletarAtividade = async () => {
     try {
-      const response = await deletarAtividadePorId(atividade.id_atividade );
-      refresh()
-      successValidation("Atividade deletada com sucesso!")
+      const response = await deletarAtividadePorId(atividade.id_atividade);
+      refresh();
+      successValidation("Atividade deletada com sucesso!");
     } catch (error) {
-      errorValidator(error?.response.data)
+      errorValidator(error?.response.data);
     }
   };
 
@@ -65,29 +45,24 @@ const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario,ex
     editarAtividade(payload);
   };
   const handleDeletarAtividade = () => {
-
     deletarAtividade();
   };
   return (
-
     <div>
-                <ToastContainer />
+      <ToastContainer />
 
       <p
         className={`${
           confirma ? "text-[#3a4dff]" : "text-red-500"
         } text-center items-center font-bold text-xl`}
       >
-        {
-        excluir ? "Excluir" :
-        confirma ? "Confirmar" : "Rejeitar"} Atividade
+        {excluir ? "Excluir" : confirma ? "Confirmar" : "Rejeitar"} Atividade
       </p>
 
       <div className="mt-4 text-center">
         <p>
-          Deseja {excluir? "Excluir" :
-          confirma ? "Confirmar" : "Rejeitar"} a atividade{" "}
-          <strong>"{titulo}"</strong>
+          Deseja {excluir ? "Excluir" : confirma ? "Confirmar" : "Rejeitar"} a
+          atividade <strong>"{titulo}"</strong>
         </p>
       </div>
 
@@ -98,13 +73,16 @@ const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario,ex
           Cancelar
         </p>
         <p
-          onClick={excluir ? () => handleDeletarAtividade() : () => handleEditAtividade(confirma)}
+          onClick={
+            excluir
+              ? () => handleDeletarAtividade()
+              : () => handleEditAtividade(confirma)
+          }
           className={`${
             confirma ? "bg-emerald-400 text-white" : "bg-red-400 text-white"
           } text-center items-center w-full p-3 rounded-md cursor-pointer hover:opacity-75 duration-150`}
         >
-          {excluir ? "Excluir":
-          confirma ? "Confirmar" : "Rejeitar"}
+          {excluir ? "Excluir" : confirma ? "Confirmar" : "Rejeitar"}
         </p>
       </div>
     </div>

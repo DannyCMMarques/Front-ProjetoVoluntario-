@@ -10,6 +10,7 @@ import Layout from "./components/layout/layout.tsx";
 import Atividades from "./pages/Atividades";
 import CadastroUsuario from "./pages/CadastroUsuarios";
 import Dashboard from "./pages/Dashboard";
+import Home from "./pages/home/index.tsx";
 import {
   default as ListarUsuariosPage,
   default as ListaUsuarios,
@@ -40,7 +41,7 @@ function AuthOnlyRoute({ children }: { children: JSX.Element }) {
 
 function App() {
   const location = useLocation();
-  const rotasSemMenuLateral = ["/login", "/cadastro"];
+  const rotasSemMenuLateral = ["/login", "/cadastro","/"];
   const menuLateralVisivel = !rotasSemMenuLateral.includes(location.pathname);
 
   return (
@@ -49,7 +50,7 @@ function App() {
         <Layout>
           <Routes>
             <Route
-              path="/home"
+              path="/inicio"
               element={
                 <ProtectedRoute>
                   <Dashboard />
@@ -105,6 +106,14 @@ function App() {
             element={
               <AuthOnlyRoute>
                 <CadastroUsuario />
+              </AuthOnlyRoute>
+            }
+          />
+           <Route
+            path="/"
+            element={
+              <AuthOnlyRoute>
+                <Home/>
               </AuthOnlyRoute>
             }
           />

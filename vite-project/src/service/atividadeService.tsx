@@ -39,7 +39,7 @@ function AtividadeService() {
     page?: number;
     size?: number;
   }) {
-    const baseParams = { page, size, ...queryParams }; // Inclui paginação e filtros
+    const baseParams = { page, size, ...queryParams };
     const queryString =
       "?" +
       Object.entries(baseParams)

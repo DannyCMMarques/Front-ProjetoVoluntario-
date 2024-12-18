@@ -19,6 +19,7 @@ const successValidation = (data: any) =>
     progress: undefined,
     theme: "light",
   });
+
 const Usuarios = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { userData, refreshUserData } = useContext(AuthContext);
@@ -66,10 +67,10 @@ const Usuarios = () => {
   const fecharModal = (success?: boolean) => {
     setIsModalOpen(false);
     if (success) {
-      successValidation("Usuario editado com sucesso")
-      refreshUserData()
+      successValidation("Usuário editado com sucesso");
+      refreshUserData();
       getUsuario(userData.idUsuario);
-    };
+    }
   };
 
   const openModal = () => setIsModalOpen(true);
@@ -89,12 +90,14 @@ const Usuarios = () => {
       </div>
     );
   }
-  const  converterData = (dataAmericana) => {
+
+  const converterData = (dataAmericana: string) => {
     const data = new Date(dataAmericana);
-    return data.toLocaleDateString('pt-BR');
-}
+    return data.toLocaleDateString("pt-BR");
+  };
+
   return (
-    <div>
+    <div className="p-4">
       <Modal isOpen={isModalOpen} onClose={fecharModal} size="small">
         <FormularioCadastroComponent
           usuario={usuario}
@@ -103,19 +106,19 @@ const Usuarios = () => {
       </Modal>
       <ContainerItem>
         <div>
-          <div className="flex justify-between items-center">
-            {usuario?.idUsuario === userData?.idUsuario  ? (
-              <p className="font-bold text-2xl">Meus Dados Pessoais</p>
+          <div className="flex flex-wrap justify-between items-center gap-4">
+            {usuario?.idUsuario === userData?.idUsuario ? (
+              <p className="font-bold text-xl md:text-2xl">Meus Dados Pessoais</p>
             ) : (
               <div>
-                <p className="font-bold text-2xl">Informações de: </p>
+                <p className="font-bold text-xl md:text-2xl">Informações de:</p>
                 <p className="font-normal text-sm">{usuario?.nome}</p>
               </div>
             )}
-            {usuario?.idUsuario === userData?.idUsuario  && (
-              <div className="flex space-x-4">
+            {usuario?.idUsuario === userData?.idUsuario && (
+              <div className="flex flex-wrap space-x-4 w-full md:w-auto">
                 <button
-                  className="bg-[#7864ff] text-white px-4 py-1 rounded-md hover:opacity-75"
+                  className="bg-[#7864ff] text-white px-4 py-1 w-full md:w-auto rounded-md hover:opacity-75"
                   onClick={openModal}
                 >
                   Editar
@@ -124,45 +127,43 @@ const Usuarios = () => {
             )}
           </div>
 
-          <hr className="mt-2 mb-2" />
+          <hr className="mt-4 mb-4" />
           <div className="mt-4">
-            <p className="text-xs">Informações do Usuário</p>
-            <div className="border rounded-md p-3 flex gap-5">
-              <div>
-                <p className="text-gray-400 text-xs">Nome</p>
-                <p className="text-sm">{usuario?.nome}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs">Data Nascimento</p>
-                <p className="text-sm">{converterData(usuario?.dataNascimento)}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs">Cidade</p>
-                <p className="text-sm">{usuario?.cidade}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs">Estado</p>
-                <p className="text-sm">{usuario?.estado}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs">
-                  {usuario?.tipo === "VOLUNTARIO"
-                    ? "Profissão"
-                    : "Necessidades"}
-                </p>
-                {usuario?.tipo === "VOLUNTARIO" ? (
-                  <p className="text-sm">{usuario?.profissao}</p>
-                ) : (
-                  usuario?.necessidades?.map((n, index) => (
-                    <p key={index} className="text-sm">
-                      {n}
-                      {index < usuario?.necessidades.length - 1 && ","}
-                    </p>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
+  <p className="text-xs font-semibold mb-2">Informações do Usuário</p>
+  <div className="flex flex-wrap gap-10 border border-gray-400 p-2 rounded-md w-full md:w-max sm:w-full">
+    <div className="flex flex-col ">
+      <p className="text-gray-400 text-xs">Nome</p>
+      <p className="text-sm font-medium">{usuario?.nome}</p>
+    </div>
+    <div className="flex flex-col ">
+      <p className="text-gray-400 text-xs">Data Nascimento</p>
+      <p className="text-sm font-medium">
+        {converterData(usuario?.dataNascimento)}
+      </p>
+    </div>
+    <div className="flex flex-col ">
+      <p className="text-gray-400 text-xs">Cidade</p>
+      <p className="text-sm font-medium">{usuario?.cidade}</p>
+    </div>
+    <div className="flex flex-col ">
+      <p className="text-gray-400 text-xs">Estado</p>
+      <p className="text-sm font-medium">{usuario?.estado}</p>
+    </div>
+    <div className="flex flex-col ">
+      <p className="text-gray-400 text-xs">
+        {usuario?.tipo === "VOLUNTARIO" ? "Profissão" : "Necessidades"}
+      </p>
+      {usuario?.tipo === "VOLUNTARIO" ? (
+        <p className="text-sm font-medium">{usuario?.profissao}</p>
+      ) : (
+        <p className="text-sm font-medium">
+          {usuario?.necessidades?.join(", ")}
+        </p>
+      )}
+    </div>
+  </div>
+</div>
+
         </div>
       </ContainerItem>
     </div>

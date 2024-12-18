@@ -1,7 +1,7 @@
 const MenuContents = (icons) => {
   const menuItems = [
     {
-      id: "home",
+      id: "inicio",
       icon: icons.home,
       label: "Home",
       submenus: [],
