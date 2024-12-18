@@ -78,10 +78,11 @@ const FormularioCadastroComponent: React.FC<{ usuario: any }> = ({ usuario, salv
   const atualizarUsuario  = async (id: number, data) => {
     try {
       const response = await atualizarUsuarioPorId(id, data);
-      if(response)
+      if(response){
         salvar()
+      }
     } catch (error) {
-      console.error("Erro ao buscar usuário:", error);
+      errorValidator(error?.response.data);
     }
   };
 

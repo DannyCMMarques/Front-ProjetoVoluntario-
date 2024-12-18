@@ -31,7 +31,7 @@ const successValidation = (data: string) =>
   });
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = AuthService();
 
   const validationSchemaLogin = z.object({
@@ -62,17 +62,17 @@ const Login = () => {
       }
 
       setTimeout(() => {
-        setIsLoading(false)
+        setIsLoading(false);
         window.location.href = "/inicio";
-      }, 1000)
+      }, 1000);
     },
     onSuccess: () => {
       reset();
-      successValidation("Usuário cadastrado com sucesso!");
+      successValidation("Login realizado com sucesso !");
     },
     onError: (error) => {
-      setIsLoading(false)
-      errorValidator(error.message);
+      setIsLoading(false);
+      errorValidator(error?.response.data);
     },
   });
 
@@ -81,7 +81,7 @@ const Login = () => {
       email: data.email,
       senha: data.senha,
     };
-    setIsLoading(true)
+    setIsLoading(true);
     mutation.mutate(payload);
   };
 
@@ -93,89 +93,91 @@ const Login = () => {
 
   return (
     <div className="h-screen">
-      {isLoading && (
-        <LoadingComponent />
-      )}
+      {isLoading && <LoadingComponent />}
 
       <ToastContainer />
-        <div className="bg-white rounded-lg w-full h-full md:flex justify-center">
-          <div className="w-full h-full flex justify-center items-center">
-            <div className="w-4/6">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                  <h2 className="text-[40px] mb-2 mt-4 font-semibold text-blue-700">
-                    Fazer login
-                  </h2>
-                  <p className="text-sm text-[#AFB8D6]">
-                    Digite seu usuário e senha para entrar!
-                  </p>
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className={`${
-                      errors.email ? "text-red-500" : "text-[#666]"
-                    }`}
-                  >
-                    Email:
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="Insira seu Email"
-                    {...register("email")}
-                    id="email"
-                    className={`${
-                      errors.email ? "border-red-500" : "border-gray-300"
-                    } border-2 p-2 rounded w-full`}
-                  />
-                  {errors.email && (
-                    <p className={erroStyle}>{errors.email.message}</p>
-                  )}
-                </div>
-                <div>
-                  <label
-                    htmlFor="senha"
-                    className={`${
-                      errors.senha ? "text-red-500" : "text-[#666]"
-                    }`}
-                  >
-                    Senha:
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="Insira sua senha"
-                    {...register("senha")}
-                    id="senha"
-                    className={`${
-                      errors.senha ? "border-red-500" : "border-gray-300"
-                    } border-2 p-2 rounded w-full`}
-                  />
-                  {errors.senha && (
-                    <p className={erroStyle}>{errors.senha.message}</p>
-                  )}
-                </div>
-                <button
-                  className="bg-buttonBlue p-2 w-full mt-4 text-white rounded-md hover:opacity-80"
-                  type="submit"
-                >
+      <div className="bg-white rounded-lg w-full h-full md:flex justify-center">
+        <div className="w-full h-full flex justify-center items-center">
+          <div className="w-4/6">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div>
+                <h2 className="text-[40px] mb-2 mt-4 font-semibold text-blue-700">
                   Fazer login
-                </button>
-              </form>
-              <div className="flex justify-between mt-4">
-                <p
-                  onClick={handleCadastro}
-                  className="text-buttonBlue text-sm hover:cursor-pointer hover:underline"
-                >
-                  Criar uma conta
-                </p>
-                <p className="text-buttonBlue text-sm hover:cursor-pointer hover:underline">
-                  Esqueci minha senha
+                </h2>
+                <p className="text-sm text-[#AFB8D6]">
+                  Digite seu usuário e senha para entrar!
                 </p>
               </div>
+              <div>
+                <label
+                  htmlFor="email"
+                  className={`${errors.email ? "text-red-500" : "text-[#666]"}`}
+                >
+                  Email:
+                </label>
+                <input
+                  type="email"
+                  placeholder="Insira seu Email"
+                  {...register("email")}
+                  id="email"
+                  className={`${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  } border-2 p-2 rounded w-full`}
+                />
+                {errors.email && (
+                  <p className={erroStyle}>{errors.email.message}</p>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor="senha"
+                  className={`${errors.senha ? "text-red-500" : "text-[#666]"}`}
+                >
+                  Senha:
+                </label>
+                <input
+                  type="password"
+                  placeholder="Insira sua senha"
+                  {...register("senha")}
+                  id="senha"
+                  className={`${
+                    errors.senha ? "border-red-500" : "border-gray-300"
+                  } border-2 p-2 rounded w-full`}
+                />
+                {errors.senha && (
+                  <p className={erroStyle}>{errors.senha.message}</p>
+                )}
+              </div>
+              <button
+                className="bg-buttonBlue p-2 w-full mt-4 text-white rounded-md hover:opacity-80"
+                type="submit"
+              >
+                Fazer login
+              </button>
+            </form>
+            <div className="flex justify-between mt-4">
+              <p
+                onClick={handleCadastro}
+                className="text-buttonBlue text-sm hover:cursor-pointer hover:underline"
+              >
+                Criar uma conta
+              </p>
+              <p className="text-buttonBlue text-sm hover:cursor-pointer hover:underline">
+                Esqueci minha senha
+              </p>
             </div>
           </div>
-          <div className="bg-buttonBlue w-full"></div>
         </div>
+        <div
+          className="w-full"
+          style={{
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundImage: `url("/imagens/login.jpg")`,
+          }}
+        ></div>
+      </div>
     </div>
   );
 };

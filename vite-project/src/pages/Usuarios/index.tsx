@@ -89,7 +89,10 @@ const Usuarios = () => {
       </div>
     );
   }
-
+  const  converterData = (dataAmericana) => {
+    const data = new Date(dataAmericana);
+    return data.toLocaleDateString('pt-BR');
+}
   return (
     <div>
       <Modal isOpen={isModalOpen} onClose={fecharModal} size="small">
@@ -131,7 +134,7 @@ const Usuarios = () => {
               </div>
               <div>
                 <p className="text-gray-400 text-xs">Data Nascimento</p>
-                <p className="text-sm">{usuario?.dataNascimento}</p>
+                <p className="text-sm">{converterData(usuario?.dataNascimento)}</p>
               </div>
               <div>
                 <p className="text-gray-400 text-xs">Cidade</p>
