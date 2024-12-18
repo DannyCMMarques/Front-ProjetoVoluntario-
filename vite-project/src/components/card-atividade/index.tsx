@@ -69,6 +69,22 @@ const CardAtividadeComponent = ({
     event.stopPropagation();
     deletar();
   };
+  const  converterData = (dataAmericana) => {
+    const data = new Date(dataAmericana);
+    return data.toLocaleDateString('pt-BR');
+}
+
+const formatarDataCompleta = (dataISO) => {
+  const data = new Date(dataISO);
+  return data.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+  });
+}
 
   return (
     <div
@@ -148,7 +164,7 @@ const CardAtividadeComponent = ({
           Atividade criada em:
         </p>
         <p className="font-normal items-center text-[12px] text-[#494949]">
-          {criadaEm}
+          { formatarDataCompleta(criadaEm)}
         </p>
       </div>
       <div className="flex gap-2 items-center mt-2">
@@ -156,7 +172,7 @@ const CardAtividadeComponent = ({
           Data de encontro:
         </p>
         <p className="font-normal text-[12px] text-[#494949]">
-          {dataEncontro} às {horario} horas
+          {converterData(dataEncontro)} às {horario} horas
         </p>
       </div>
       <div className="flex gap-2 items-center mt-2">

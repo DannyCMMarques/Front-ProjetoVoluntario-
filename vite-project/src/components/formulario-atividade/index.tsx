@@ -45,8 +45,6 @@ const FormComponent: React.FC = ({
   const {
     salvarAtividade,
     atualizarAtividadePorId,
-    deletarAtividadePorId,
-    exibirAtividadePorId,
   } = AtividadeService();
   const [confirmada, setConfirmada] = useState(false);
   const [rejeitada, setRejeitada] = useState(false);
@@ -76,8 +74,8 @@ const FormComponent: React.FC = ({
       successValidation("Atividade criada com sucesso!");
       fecharModal();
     },
-    onError: () => {
-      errorValidator("Erro ao criar atividade!");
+    onError: (error) => {
+      errorValidator(error?.response.data);
     },
   });
 
@@ -102,8 +100,10 @@ const FormComponent: React.FC = ({
     try {
       await atualizarAtividadePorId(idAtividade, payload);
       fecharModal();
+      successValidation("Atividade editada com sucesso!");
+
     } catch (error) {
-      console.error("Erro ao buscar usuário:", error);
+      errorValidator(error?.response.data);
     }
   };
 

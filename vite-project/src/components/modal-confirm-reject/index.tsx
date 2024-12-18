@@ -1,4 +1,32 @@
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AtividadeService from "../../service/atividadeService";
+
+const errorValidator = (data: string) =>
+  toast(`${data}`, {
+    position: "top-right",
+    autoClose: 1500,
+    type: "error",
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "light",
+  });
+
+const successValidation = (data: string) =>
+  toast(`${data}`, {
+    position: "top-right",
+    autoClose: 1500,
+    type: "success",
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "light",
+  });
+
+
 
 const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario,excluir }) => {
   const { atualizarAtividadePorId,deletarAtividadePorId } = AtividadeService();
@@ -11,18 +39,19 @@ const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario,ex
         payload
       );
       refresh()
+      successValidation("Atividade atualizada com sucesso!")
     } catch (error) {
-      console.error("Erro ao atualizar atividade:", error);
+      errorValidator(error?.response.data)
     }
   };
 
   const deletarAtividade = async () => {
     try {
       const response = await deletarAtividadePorId(atividade.id_atividade );
-
       refresh()
+      successValidation("Atividade deletada com sucesso!")
     } catch (error) {
-      console.error("Erro ao atualizar atividade:", error);
+      errorValidator(error?.response.data)
     }
   };
 
@@ -40,7 +69,10 @@ const ModalConfirmaRejeita = ({ confirma, titulo, atividade, refresh, usuario,ex
     deletarAtividade();
   };
   return (
+
     <div>
+                <ToastContainer />
+
       <p
         className={`${
           confirma ? "text-[#3a4dff]" : "text-red-500"

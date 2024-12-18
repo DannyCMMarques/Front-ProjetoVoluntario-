@@ -31,7 +31,10 @@ const CardPessoaComponent = ({
     searchParams.set("id", idUsuario.toString());
     navigate(`/usuario?${searchParams.toString()}`);
   };
-
+  const  converterData = (dataAmericana) => {
+    const data = new Date(dataAmericana);
+    return data.toLocaleDateString('pt-BR');
+}
   return (
     <div className="w-full max-w-[380px] rounded-md shadow-md mx-auto bg-white overflow-hidden">
       <div className={`w-full rounded-t-md h-10 ${obterCorDeFundo()}`}>
@@ -76,7 +79,7 @@ const CardPessoaComponent = ({
               <p className="text-xs">{name || "Não informado"}</p>
 
               <p className="font-bold text-sm mt-2">Nascimento</p>
-              <p className="text-xs">{dataNacimento || "Não informado"}</p>
+              <p className="text-xs">{converterData(dataNacimento) || "Não informado"}</p>
             </div>
 
             <div>

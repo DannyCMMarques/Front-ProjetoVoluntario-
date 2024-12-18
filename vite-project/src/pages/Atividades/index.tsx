@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AtividadeExibida from "../../components/atividadeExibida";
 import CardAtividadeComponent from "../../components/card-atividade";
 import ContainerItem from "../../components/container";
@@ -8,6 +10,17 @@ import ModalConfirmaRejeita from "../../components/modal-confirm-reject";
 import Paginacao from "../../components/paginacao";
 import AtividadeService from "../../service/atividadeService";
 import { AuthContext } from "../../utils/context/useContext/useUserContext";
+
+const errorValidator = (data: string) =>
+  toast.error(`${data}`, {
+    position: "top-right",
+    autoClose: 1500,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "light",
+  });
 
 const Atividades = () => {
   const [atividades, setAtividades] = useState([]);
@@ -29,7 +42,12 @@ const Atividades = () => {
     itemsPerPage: 10,
   });
 
-  const handleGetAtividades = async (id: number, filtro: string, page = 0, size = 10) => {
+  const handleGetAtividades = async (
+    id: number,
+    filtro: string,
+    page = 0,
+    size = 10
+  ) => {
     try {
       let queryParams = {};
       switch (filtro) {
@@ -62,9 +80,8 @@ const Atividades = () => {
         totalItems: response.data.totalElements,
         itemsPerPage: response.data.pageable.pageSize,
       });
-
     } catch (error) {
-      console.error("Erro ao obter atividades:", error);
+      errorValidator(error?.response.data);
     }
   };
 
@@ -218,11 +235,13 @@ const Atividades = () => {
           )}
         </div>
         <Paginacao
-  currentPage={infoPaginacao.currentPage}
-  totalItems={infoPaginacao.totalItems}
-  itemsPerPage={infoPaginacao.itemsPerPage}
-  onPageChange={(page) => handleGetAtividades(userData.idUsuario, filtro, page - 1)}
-/>
+          currentPage={infoPaginacao.currentPage}
+          totalItems={infoPaginacao.totalItems}
+          itemsPerPage={infoPaginacao.itemsPerPage}
+          onPageChange={(page) =>
+            handleGetAtividades(userData.idUsuario, filtro, page - 1)
+          }
+        />
       </ContainerItem>
     </div>
   );

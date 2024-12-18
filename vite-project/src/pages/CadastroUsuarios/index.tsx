@@ -11,6 +11,7 @@ import * as z from "zod";
 import useUsuarioService from "../../service/UsuarioService";
 import { habilidadeVoluntarioMock } from "../../utils/mocks/Cadastro/HabilidadesMock";
 import { necessidadesIdosoMock } from "../../utils/mocks/Cadastro/Necessidades";
+
 const errorValidator = (data: any) =>
   toast(`${data}`, {
     position: "top-right",
@@ -58,7 +59,6 @@ const CadastroUsuario: React.FC = () => {
       tipo: z.string().optional(),
       necessidade: z.any(),
       habilidade: z.string().optional(),
-      foto: z.string(),
     })
     .superRefine((data, ctx) => {
       if (tipo === "VOLUNTARIO") {
@@ -103,25 +103,24 @@ const CadastroUsuario: React.FC = () => {
       estado: "",
       profissao: "",
       cpf: "",
-      tipo:"",
-      necessidade:"",
+      tipo: "",
+      necessidade: "",
       habilidade: "",
-      foto:""
+      foto: "",
     },
   });
   const mutation = useMutation({
     mutationFn: cadastrarUsuario,
     onSuccess: () => {
       reset();
-      successValidation("Usuario cadastrado com sucesso!");
+      successValidation("Cadastro realizado com sucesso!");
     },
-    onError: () => {
-      errorValidator("Ops, Houve um erro!");
+    onError: (error) => {
+      errorValidator(error?.response.data);
     },
   });
 
   const onSubmit = (data: any) => {
-
     if (!tipo) {
       errorValidator("Selecione o tipo de cadastro.");
       return;
@@ -136,7 +135,7 @@ const CadastroUsuario: React.FC = () => {
       profissao: data.profissao,
       cpf: data.cpf,
       tipo: tipo,
-      necessidade:data.necessidade,
+      necessidade: data.necessidade,
       habilidade: data.habilidade,
       foto: data.foto,
     };
@@ -206,7 +205,7 @@ const CadastroUsuario: React.FC = () => {
             )}
             {tipo && (
               <form
-                className="w-4/6 h-full flex justify-center items-center "
+                className="w-11/12 md:w-4/6 sm:w-11/12 h-full flex justify-center items-center "
                 onSubmit={handleSubmit(onSubmit, onError)}
               >
                 <div>
@@ -489,27 +488,7 @@ const CadastroUsuario: React.FC = () => {
                         <p className={erroStyle}> {errors.email.message}</p>
                       )}
                     </div>
-                    <div>
-                      <label
-                        className={`${
-                          errors.foto
-                            ? "border-red-500 text-red-500"
-                            : "border-gray-300"
-                        }`}
-                        htmlFor="Foto"
-                      >
-                        Foto:
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="insira um link de sua foto em JPG ou PNG"
-                        {...register("foto")}
-                        id="foto"
-                        className={`${
-                          errors.foto ? "input-error" : "border-gray-300"
-                        } border-2 p-2 rounded w-full`}
-                      />
-                    </div>
+                    <div></div>
                     <div>
                       <label
                         className={`${
@@ -549,7 +528,7 @@ const CadastroUsuario: React.FC = () => {
           </div>
           <div className="flex justify-center items-center">
             <div
-              className="w-[90%] h-[96%]"
+              className="w-full h-full"
               style={{
                 backgroundPosition: "center",
                 backgroundSize: "cover",
