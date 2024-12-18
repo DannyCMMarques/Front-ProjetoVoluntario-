@@ -75,6 +75,8 @@ const ListarUsuariosPage = () => {
         <span class="material-symbols-outlined">elderly</span>{" "}
       </p>
     );
+
+    console.log(voluntarios);
   return (
     <div>
       {isLoading ? (
@@ -105,10 +107,11 @@ const ListarUsuariosPage = () => {
                     sexo="feminino"
                     idoso={tipo === "voluntario" ? false : true}
                     abrirModalUsuario={abrirModal}
-                    necessidades={[]}
+                    necessidades={item?.necessidade.map((item)=>item)}
                     podeAgendar={podeAgendar}
                     profile={item.foto}
                     idUsuario={item.idUsuario}
+                    profissao ={item.profissao}
                   />
                 ))}
               </div>

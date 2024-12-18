@@ -13,6 +13,7 @@ const CardPessoaComponent = ({
   idoso = true,
   podeAgendar,
   idUsuario,
+  profissao,
 }) => {
   const obterCorDeFundo = () => {
     if (!sexo || idoso === null) return "bg-[#BCBCBC]";
@@ -24,17 +25,16 @@ const CardPessoaComponent = ({
   };
   const navigate = useNavigate();
 
-
   const handleNavigate = (idUsuario: number | undefined) => {
     if (!idUsuario) return;
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set("id", idUsuario.toString());
     navigate(`/usuario?${searchParams.toString()}`);
   };
-  const  converterData = (dataAmericana) => {
+  const converterData = (dataAmericana) => {
     const data = new Date(dataAmericana);
-    return data.toLocaleDateString('pt-BR');
-}
+    return data.toLocaleDateString("pt-BR");
+  };
   return (
     <div className="w-full max-w-[380px] rounded-md shadow-md mx-auto bg-white overflow-hidden">
       <div className={`w-full rounded-t-md h-10 ${obterCorDeFundo()}`}>
@@ -72,29 +72,39 @@ const CardPessoaComponent = ({
           />
         </div>
 
-        <div className="flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="font-bold text-sm">Nome</p>
-              <p className="text-xs">{name || "Não informado"}</p>
+        <div className="flex-1 w-full md:w-max sm:w-full">
+  <div className="flex w-full md:flex-row gap-4">
+    <div className="flex-1 w-full">
+      <p className="font-bold text-sm">Nome</p>
+      <p className="text-xs">{name || "Não informado"}</p>
 
-              <p className="font-bold text-sm mt-2">Nascimento</p>
-              <p className="text-xs">{converterData(dataNacimento) || "Não informado"}</p>
-            </div>
+      <p className="font-bold text-sm mt-2">Nascimento</p>
+      <p className="text-xs">{converterData(dataNacimento) || "Não informado"}</p>
+    </div>
 
-            <div>
-              <p className="font-bold text-sm">Cidade</p>
-              <p className="text-xs">
-                {cidade && estado ? `${cidade} / ${estado}` : "Não informado"}
-              </p>
+    <div className="flex-1">
+      <p className="font-bold text-sm">Cidade</p>
+      <p className="text-xs">
+        {cidade && estado ? `${cidade} / ${estado}` : "Não informado"}
+      </p>
 
-              <p className="font-bold text-sm mt-2">Necessidades</p>
-              <p className="text-xs">
-                {necessidades || "Nenhuma necessidade específica"}
-              </p>
-            </div>
-          </div>
-        </div>
+      {idoso && (
+        <>
+          <p className="font-bold text-sm mt-2">Necessidades</p>
+          <p className="text-xs">{necessidades || "Nenhuma necessidade específica"}</p>
+        </>
+      )}
+
+      {!idoso && (
+        <>
+          <p className="font-bold text-sm mt-2">Profissão</p>
+          <p className="text-xs">{profissao || "Não Informado"}</p>
+        </>
+      )}
+    </div>
+  </div>
+</div>
+
       </div>
     </div>
   );

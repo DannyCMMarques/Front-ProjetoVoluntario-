@@ -45,31 +45,32 @@ const AtividadeExibida = (atividade) => {
         </div>
 
         <div className="mt-4">
-                    <p className="text-sm text-blue-800">Criado Por</p>
-                    <div className="border rounded-md p-3 flex gap-5">
-                        <div>
-                            <p className="text-blue-500 text-sm">Nome</p>
-                            <p className="text-sm">{atividades?.usuarioCriador?.nome}</p>
-                        </div>
-                        <div>
-                            <p className="text-blue-500 text-sm">Cidade</p>
-                            <p className="text-sm">{atividades?.usuarioCriador?.cidade}</p>
-                        </div>
-                        <div>
-                            <p className="text-blue-500 text-sm">Estado</p>
-                            <p className="text-sm">{atividades?.usuarioCriador?.estado}</p>
-                        </div>
-                        <div>
-                            <span
-                                className="text-blue-700 hover:text-blue-900 cursor-pointer font-medium text-sm  flex justify-end items-center"
-                                onClick={() => handleNavigate(atividades?.usuarioCriador?.idUsuario)}
-                            >
-                                ➤ Visualizar Perfil
-                            </span>
-                        </div>
-                    </div>
-
-                </div>
+          <p className="text-sm text-blue-800">Criado Por</p>
+          <div className="border rounded-md p-3 flex gap-5">
+            <div>
+              <p className="text-blue-500 text-sm">Nome</p>
+              <p className="text-sm">{atividades?.usuarioCriador?.nome}</p>
+            </div>
+            <div>
+              <p className="text-blue-500 text-sm">Cidade</p>
+              <p className="text-sm">{atividades?.usuarioCriador?.cidade}</p>
+            </div>
+            <div>
+              <p className="text-blue-500 text-sm">Estado</p>
+              <p className="text-sm">{atividades?.usuarioCriador?.estado}</p>
+            </div>
+            <div>
+              <span
+                className="text-blue-700 hover:text-blue-900 cursor-pointer font-medium text-sm  flex justify-end items-center"
+                onClick={() =>
+                  handleNavigate(atividades?.usuarioCriador?.idUsuario)
+                }
+              >
+                ➤ Visualizar Perfil
+              </span>
+            </div>
+          </div>
+        </div>
 
         <div className="mt-4">
           <p className="text-sm  text-blue-800">Convidado</p>
@@ -87,13 +88,15 @@ const AtividadeExibida = (atividade) => {
               <p className="text-sm">{atividades?.usuarioConvidado?.estado}</p>
             </div>
             <div>
-                            <span
-                                className="text-blue-700 hover:text-blue-900 cursor-pointer font-medium text-sm  flex justify-end items-center"
-                                onClick={() => handleNavigate(atividades?.usuarioConvidado?.idUsuario)}
-                            >
-                                ➤ Visualizar Perfil
-                            </span>
-                        </div>
+              <span
+                className="text-blue-700 hover:text-blue-900 cursor-pointer font-medium text-sm  flex justify-end items-center"
+                onClick={() =>
+                  handleNavigate(atividades?.usuarioConvidado?.idUsuario)
+                }
+              >
+                ➤ Visualizar Perfil
+              </span>
+            </div>
           </div>
         </div>
       </div>

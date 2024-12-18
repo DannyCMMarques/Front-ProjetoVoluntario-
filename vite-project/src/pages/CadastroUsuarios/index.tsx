@@ -104,7 +104,7 @@ const CadastroUsuario: React.FC = () => {
       profissao: "",
       cpf: "",
       tipo: "",
-      necessidade: "",
+      necessidade: [],
       habilidade: "",
       foto: "",
     },
@@ -137,7 +137,7 @@ const CadastroUsuario: React.FC = () => {
       tipo: tipo,
       necessidade: data.necessidade,
       habilidade: data.habilidade,
-      foto: data.foto,
+      foto:""
     };
     mutation.mutate(payload);
   };
