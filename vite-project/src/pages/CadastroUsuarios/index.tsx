@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { FaHandHoldingHeart } from "react-icons/fa";
 import { FaPersonCane } from "react-icons/fa6";
 import { MdKeyboardBackspace } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
@@ -38,7 +39,7 @@ const successValidation = (data: any) =>
   });
 const CadastroUsuario: React.FC = () => {
   const [tipo, setTipo] = useState<"IDOSO" | "VOLUNTARIO" | null>(null);
-
+ const navigate = useNavigate()
   const { cadastrarUsuario } = useUsuarioService();
   const validationSchemaLogin = z
     .object({
@@ -114,9 +115,13 @@ const CadastroUsuario: React.FC = () => {
     onSuccess: () => {
       reset();
       successValidation("Cadastro realizado com sucesso!");
+      setTimeout(() => {
+        navigate("/login")
+      }, 4000);
     },
     onError: (error) => {
-      errorValidator(error?.response.data);
+      errorValidator(error?.response.data.mensagem);
+      console.log(error?.response)
     },
   });
 

@@ -35,12 +35,11 @@ const Section1= ()=>{
             Conheca o nosso sistema de
             <span className="text-[#AD4F13] font-bold">
               {" "}
-              Voluntáriado intergeracional
+              Voluntáriado
             </span>
           </h1>
           <p className="text-black mb-8 text-lg leading-relaxed">
-            Permitimos a troca de experiencia entre jovens e idosos, venha fazer
-            parte!
+          Promovemos o voluntariado intergeracional, conectando jovens e idosos em uma troca enriquecedora de experiências. Venha fazer parte!
           </p>
           <div className="flex space-x-4">
             <button
@@ -61,14 +60,14 @@ const Section1= ()=>{
           <div className="absolute top-12 right-8 bg-white p-3 rounded-lg shadow-lg flex items-center">
             <span className="text-lg">🏅</span>
             <div className="ml-2">
-              <p className="text-sm font-semibold">Voluntariado</p>
+              <p className="text-sm font-semibold">Voluntários</p>
               <p className="text-xs text-gray-500">Sempre ativos</p>
             </div>
           </div>
           <div className="absolute bottom-12 left-8 bg-white p-3 rounded-lg shadow-lg flex items-center">
             <span className="text-lg">⚡</span>
             <div className="ml-2">
-              <p className="text-sm font-semibold">Serviços 24/horas</p>
+              <p className="text-sm font-semibold">Serviços 24 horas</p>
               <p className="text-xs text-gray-500">Acesso gratuito</p>
             </div>
           </div>
