@@ -151,7 +151,7 @@ const Dashboard = () => {
                 </ul>
               ) : (
                 <p className="text-gray-500 italic">
-                  Nenhuma atividade pendente.
+                  Você ainda não possui nenhuma atividade confirmada.
                 </p>
               )}
             </div>
