@@ -59,7 +59,7 @@ Certifique-se de ter as seguintes ferramentas instaladas em sua máquina:
 1. **Clone o Repositório**  
    Execute o seguinte comando no terminal para clonar o repositório do frontend:  
    ```bash
-   git clone https://github.com/DannyCMMarques/Back-ProjetoVolunt-rio.git
+   git clone https://github.com/DannyCMMarques/Front-ProjetoVoluntario-.git
      ```
    
 2.Instale as Dependências
