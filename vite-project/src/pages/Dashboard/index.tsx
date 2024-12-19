@@ -6,8 +6,8 @@ import { AuthContext } from "../../utils/context/useContext/useUserContext";
 const Dashboard = () => {
   const [idosos, setIdosos] = useState();
   const [voluntarios, setVoluntarios] = useState();
-  const [ativPendentes, setAtivPendentes] = useState({});
-  const [ativConfirmada, setAtivConfirmada] = useState({});
+  const [ativPendentes, setAtivPendentes] = useState([]);
+  const [ativConfirmada, setAtivConfirmada] = useState([]);
 
   const { userData } = useContext(AuthContext);
   const [usuarioConectado, setUsuarioConectado] = useState(userData);
@@ -29,21 +29,63 @@ const Dashboard = () => {
     try {
       const response = await MinhasAtividades(id);
       console.log("ativoidade", response);
-      console.log(3333);
     } catch (error) {
       console.error("Erro ao buscar voluntários:", error);
     }
   };
+  const handleAtividadePendente = async (
+    id: number,
+    page = 0,
+    size = 10
+  ) => {
+    try {
+    const queryParams = { confirmada: false, rejeitada: false };
 
-  const atividadesConfirmadas = 12;
-  const atividadesPendentes = 5;
+      const response = await filtroAtividade({
+        id,
+        queryParams,
+        page,
+        size,
+      });
+      setAtivPendentes(response.data.content);
+      console.log(222,response.data.content)
+    } catch (error) {
+      console.log(error?.response.data);
+    }
+  };
+  const handleAtividadeConfirmada = async (
+    id: number,
+    page = 0,
+    size = 10
+  ) => {
+    try {
+    const queryParams = { confirmada: true, rejeitada: false };
+
+      const response = await filtroAtividade({
+        id,
+        queryParams,
+        page,
+        size,
+      });
+      setAtivConfirmada(response.data.content);
+      console.log(response.data.content)
+    } catch (error) {
+      console.log(error?.response.data);
+    }
+  };
 
   useEffect(() => {
     getUsuarios();
     if (userData?.idUsuario) {
-      getAtividade(userData.idUsuario);
+     handleAtividadeConfirmada(userData.idUsuario);
+     handleAtividadePendente(userData.idUsuario);
     }
   }, []);
+  const  converterData = (dataAmericana) => {
+    const data = new Date(dataAmericana);
+    return data.toLocaleDateString('pt-BR');
+}
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <ContainerItem>
@@ -57,11 +99,13 @@ const Dashboard = () => {
           <div className="w-full lg:w-1/2 flex flex-wrap gap-4 justify-start lg:justify-start">
             <div className="bg-blue-500 text-white p-3 rounded-md shadow-md hover:bg-blue-600 transition-all duration-300 text-center w-32">
               <h2 className="text-sm font-semibold">Confirmadas</h2>
-              <p className="text-lg font-bold">{atividadesConfirmadas}</p>
+              <p className="text-lg font-bold">{ativConfirmada?.length}</p>
             </div>
             <div className="bg-yellow-500 text-white p-3 rounded-md shadow-md hover:bg-yellow-600 transition-all duration-300 text-center w-32">
               <h2 className="text-sm font-semibold">Pendentes</h2>
-              <p className="text-lg font-bold">{atividadesPendentes}</p>
+              <p className="text-lg font-bold">
+              {ativPendentes?.length}
+              </p>
             </div>
             <div className="bg-green-500 text-white p-3 rounded-md shadow-md hover:bg-green-600 transition-all duration-300 text-center w-32">
               <h2 className="text-sm font-semibold">Voluntários</h2>
@@ -97,11 +141,11 @@ const Dashboard = () => {
               <h2 className="text-xl font-semibold mb-4">
                 Confira suas próximas atividades
               </h2>
-              {ativPendentes.length > 0 ? (
+              {ativConfirmada.length > 0 ? (
                 <ul>
-                  {ativPendentes.map((atividade, index) => (
+                  {ativConfirmada.map((atividade, index) => (
                     <li key={index} className="mb-2 text-gray-700">
-                      {atividade.nome}
+                      {atividade?.nomeAtividade}
                     </li>
                   ))}
                 </ul>
@@ -112,7 +156,7 @@ const Dashboard = () => {
               )}
             </div>
           </div>
-          <div className="hidden md:block sm:hidden flex-1 w-full lg:w-1/2 relative mb-20">
+          <div className="hidden md:block sm:hidden flex-1 w-full md:w-1/2 relative mb-20">
               <img
                 src="./public/imagens/dashboard.jpg"
                 alt=""

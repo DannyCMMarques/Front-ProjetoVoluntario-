@@ -33,7 +33,7 @@ function AuthOnlyRoute({ children }: { children: JSX.Element }) {
   const token = localStorage.getItem("access_token");
 
   if (token) {
-    return <Navigate to="/home" />;
+    return <Navigate to="/inicio" />;
   }
 
   return children;

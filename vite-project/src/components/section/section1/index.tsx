@@ -11,7 +11,14 @@ const Section1= ()=>{
       <header className="w-full max-w-[1280px] flex justify-between bg-white  rounded-full shadow-md z-10 px-8">
         <div className=" mx-auto max-w-[1280px] w-full flex justify-between items-center px-8 py-4">
           <div className="text-2xl font-bold text-gray-800 flex items-center">
-            <span className="text-orange-500 pr-2">▲</span> Senior Care
+            <span className="text-orange-500 pr-2">
+
+            <img
+            src="./public/imagens/logo.png"
+            alt="logo"
+            className="object-cover w-[80px]"
+          />
+              </span> Senior Care
           </div>
           <button
             onClick={() => handleEntrarClick()}

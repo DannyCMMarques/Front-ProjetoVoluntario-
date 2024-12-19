@@ -40,36 +40,25 @@ const SideMenu = () => {
 
   const handleMenuClick = (menuId) => {
     if (selectedMenu === menuId) {
-      setSelectedMenu("");
-      setIsSubmenuOpen(false);
-      setSelectedSubmenu("");
+      setIsSubmenuOpen(!isSubmenuOpen);
     } else {
       setSelectedMenu(menuId);
       setIsSubmenuOpen(true);
       setSelectedSubmenu("");
     }
   };
-
   const handleSubmenuClick = (submenuId) => {
     setSelectedSubmenu(submenuId);
      handleNavigate(submenuId, true)
   };
-
   const handleNavigate = (link, isSubmenu = false) => {
-    if (isSubmenu) {
-      navigate(link);
-    } else {
-      navigate(link);
-      if (selectedMenu === link) {
-        setIsSubmenuOpen(false);
-        setSelectedSubmenu("");
-      } else {
-        setIsSubmenuOpen(true);
-        setSelectedSubmenu("");
-      }
+    navigate(link);
+
+    if (!isSubmenu) {
+      setIsSubmenuOpen(false);
+      setSelectedSubmenu("");
     }
   };
-
   const handleLogout = () => {
     setIsLoading(true)
     localStorage.removeItem("access_token");
@@ -80,14 +69,14 @@ const SideMenu = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen sticky bottom-8">
             {isLoading && (
         <LoadingComponent />
       )}
       <div
         className={`bg-white border-r border-gray-300 transition-all duration-300 relative ${
-          isExpanded ? "w-48" : "w-24"
-        }`}
+          isExpanded ? "w-48" : "w-28"
+        } sticky  bottom-0 h-screen`}
       >
         <button
           onClick={toggleMenu}
@@ -136,7 +125,7 @@ const SideMenu = () => {
 
                 {shouldRenderText && (
                   <p
-                    className={`text-gray-700 transform transition-all duration-300 ${
+                    className={`text-gray-700 transform transition-all duration-100 ${
                       isExpanded
                         ? "opacity-100 translate-x-0"
                         : "opacity-0 translate-x-[-10px]"
@@ -159,23 +148,21 @@ const SideMenu = () => {
                 )}
               </div>
 
-              {menu.submenus && menu.submenus.length > 0 && (
+              {menu.submenus && selectedMenu === menu.id && (
                 <div
                   className={`transition-all duration-300 overflow-hidden ${
-                    selectedMenu === menu.id && isSubmenuOpen
+                    isSubmenuOpen
                       ? "max-h-40"
                       : "max-h-0"
                   }`}
                 >
-                  <div className="pl-14">
+                  <div className={
+                    isExpanded ? "pl-14" :"p-2"
+                  } >
                     {menu.submenus.map((submenu) => (
                       <div
                         key={submenu.id}
-                        className={`flex items-center py-2 px-1 text-[14px] cursor-pointer hover:bg-gray-50 transform transition-all duration-100 ${
-                          isExpanded
-                            ? "opacity-100 translate-x-0"
-                            : "opacity-0 translate-x-[-10px]"
-                        } ${
+                        className={`flex items-center py-2 px-1 text-[14px] cursor-pointer hover:bg-gray-50 transform transition-all duration-0                        ${
                           selectedSubmenu === submenu.id
                             ? "text-[#9a89ff]"
                             : "text-gray-700"
@@ -185,7 +172,7 @@ const SideMenu = () => {
                         <span className="text-[14px]">
                           <MdChevronRight />
                         </span>
-                        <span onClick={() => handleNavigate(submenu.id, true)}>
+                        <span>
                           {submenu.label}
                         </span>
                       </div>
